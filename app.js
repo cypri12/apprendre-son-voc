@@ -2,49 +2,51 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     event.preventDefault(); // Empêche le rechargement de la page
 
     const fileInput = document.getElementById('imageInput');
-    const outputDiv = document.getElementById('output'); // Zone de sortie
+    const outputDiv = document.getElementById('output'); // Zone d'affichage
 
-    // Vérifie si un fichier est sélectionné
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<h3>Erreur :</h3><p>Veuillez choisir une image.</p>`;
         return;
     }
 
-    // Affiche "Analyse en cours..."
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
-
     const file = fileInput.files[0];
     const image = URL.createObjectURL(file);
 
     try {
         // Analyse OCR avec Tesseract.js
-        const result = await Tesseract.recognize(image, 'eng+deu'); // Ajout du support pour allemand et anglais/français
-        const rawText = result.data.text; // Texte brut extrait
-
-        // Divise le texte par lignes
-        const lines = rawText.split('\n').filter((line) => line.trim() !== '');
-
-        // Sépare les colonnes
-        const pairs = lines.map((line) => {
-            const parts = line.split(/\s{2,}|\t/); // Sépare par espaces multiples ou tabulation
-            return parts.length === 2 ? { left: parts[0], right: parts[1] } : null;
-        }).filter(Boolean); // Supprime les lignes mal formées
-
-        if (pairs.length === 0) {
-            throw new Error('Aucune paire de mots (gauche/droite) détectée.');
-        }
-
-        // Affiche les paires dans la console pour vérifier
-        console.log('Paires détectées :', pairs);
-
-        // Affiche les paires pour l'utilisateur
-        outputDiv.innerHTML = `<h3>Paires de mots détectées :</h3>`;
-        pairs.forEach((pair) => {
-            outputDiv.innerHTML += `<p><strong>Gauche :</strong> ${pair.left} | <strong>Droite :</strong> ${pair.right}</p>`;
+        const result = await Tesseract.recognize(image, 'deu+fra', {
+            logger: (info) => console.log(info),
+            tessedit_pageseg_mode: 4, // Détection des colonnes
         });
 
-        // Stocke les paires pour une future interrogation
-        startQuiz(pairs); // Lance les questions
+        // Texte brut extrait
+        const rawText = result.data.text;
+        console.log('Texte brut extrait :', rawText);
+
+        // Divise le texte en lignes
+        const lines = rawText.split('\n').filter((line) => line.trim() !== '');
+        console.log('Lignes détectées :', lines);
+
+        // Séparation gauche/droite
+        const pairs = lines.map((line) => {
+            const parts = line.split(/\s{4,}/); // Sépare par au moins 4 espaces
+            return parts.length === 2 ? { left: parts[0].trim(), right: parts[1].trim() } : null;
+        }).filter(Boolean);
+
+        if (pairs.length === 0) {
+            console.log('Lignes détectées :', lines);
+            throw new Error('Aucune paire de mots (gauche/droite) détectée. Vérifiez l\'image.');
+        }
+
+        // Affiche les paires
+        outputDiv.innerHTML = `<h3>Paires de mots détectées :</h3>`;
+        pairs.forEach((pair) => {
+            outputDiv.innerHTML += `<p><strong>Allemand :</strong> ${pair.left} | <strong>Français :</strong> ${pair.right}</p>`;
+        });
+
+        // Interroge l'utilisateur (facultatif)
+        startQuiz(pairs);
     } catch (error) {
         console.error('Erreur détaillée :', error);
         outputDiv.innerHTML = `<h3>Erreur :</h3><p>${error.message}</p>`;
