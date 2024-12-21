@@ -1,0 +1,30 @@
+/* Styles généraux pour le site */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Titre principal */
+h1 {
+    color: #4CAF50;
+}
+
+/* Formulaire */
+form {
+    margin-top: 20px;
+}
+
+/* Zone de résultats */
+#output {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
