@@ -3,34 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Apprendre son voc</title>
+    <link rel="stylesheet" href="style.css"> <!-- Fichier de style pour embellir l'interface -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.1/dist/tesseract.min.js"></script> <!-- Tesseract.js chargé depuis un CDN -->
+    <script src="app.js" defer></script> <!-- Fichier JavaScript avec la logique OCR -->
+    <title>OCR avec Tesseract.js</title>
 </head>
 <body>
-    <h1>Apprends ton vocabulaire d'allemand</h1>
+    <h1>OCR avec Tesseract.js</h1>
+
+    <!-- Formulaire pour sélectionner une image -->
     <form id="uploadForm">
-        <input type="file" accept="image/*" id="imageInput">
-        <button type="submit">Analyser l'image</button>
+        <input type="file" accept="image/*" id="imageInput"> <!-- Permet de choisir une image -->
+        <button type="submit">Analyser l'image</button> <!-- Lance l'analyse de l'image -->
     </form>
+
+    <!-- Zone pour afficher les résultats -->
     <div id="output"></div>
-    <script src="app.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
