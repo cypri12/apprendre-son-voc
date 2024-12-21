@@ -4,6 +4,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output'); // Zone d'affichage
 
+    // Vérifie si un fichier a été sélectionné
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<h3>Erreur :</h3><p>Veuillez choisir une image.</p>`;
         return;
@@ -17,35 +18,14 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         // Analyse OCR avec Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
             logger: (info) => console.log(info), // Logs de progression
-            tessedit_pageseg_mode: 4, // Détection de colonnes ou blocs alignés
         });
 
         // Affiche le texte brut extrait par Tesseract.js
-        const rawText = result.data.text;
-        console.log('Texte brut extrait :', rawText);
-        outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${rawText}</pre>`;
-
-        // Divise le texte en lignes
-        const lines = rawText.split('\n').filter((line) => line.trim() !== '');
-        console.log('Lignes détectées :', lines);
-
-        // Tente de détecter les colonnes
-        const pairs = lines.map((line) => {
-            const parts = line.split(/\s{4,}/); // Sépare par au moins 4 espaces
-            return parts.length === 2 ? { left: parts[0].trim(), right: parts[1].trim() } : null;
-        }).filter(Boolean);
-
-        // Affiche les résultats des colonnes
-        if (pairs.length > 0) {
-            outputDiv.innerHTML += `<h3>Paires de mots détectées :</h3>`;
-            pairs.forEach((pair) => {
-                outputDiv.innerHTML += `<p><strong>Allemand :</strong> ${pair.left} | <strong>Français :</strong> ${pair.right}</p>`;
-            });
-        } else {
-            outputDiv.innerHTML += `<h3>Aucune paire détectée :</h3><p>Le texte brut ne contient pas de colonnes détectables.</p>`;
-        }
+        const rawText = result.data.text; // Récupère le texte brut extrait
+        console.log('Texte brut extrait :', rawText); // Affiche dans la console
+        outputDiv.innerHTML = `<h3>Texte extrait de l'image :</h3><pre>${rawText}</pre>`; // Affiche sur la page
     } catch (error) {
-        console.error('Erreur détaillée :', error);
-        outputDiv.innerHTML = `<h3>Erreur :</h3><p>${error.message}</p>`;
+        console.error('Erreur détaillée :', error); // Affiche les détails dans la console
+        outputDiv.innerHTML = `<h3>Erreur :</h3><p>${error.message}</p>`; // Affiche un message d'erreur
     }
 });
