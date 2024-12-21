@@ -17,12 +17,13 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         // Analyse OCR avec Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
             logger: (info) => console.log(info),
-            tessedit_pageseg_mode: 4, // Détection des colonnes
+            tessedit_pageseg_mode: 6, // Mode adapté aux colonnes
         });
 
         // Texte brut extrait
         const rawText = result.data.text;
         console.log('Texte brut extrait :', rawText);
+        outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${rawText}</pre>`;
 
         // Divise le texte en lignes
         const lines = rawText.split('\n').filter((line) => line.trim() !== '');
@@ -30,7 +31,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 
         // Séparation gauche/droite
         const pairs = lines.map((line) => {
-            const parts = line.split(/\s{4,}/); // Sépare par au moins 4 espaces
+            const parts = line.split(/\s{2,}/); // Sépare par au moins 2 espaces
             return parts.length === 2 ? { left: parts[0].trim(), right: parts[1].trim() } : null;
         }).filter(Boolean);
 
@@ -44,47 +45,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         pairs.forEach((pair) => {
             outputDiv.innerHTML += `<p><strong>Allemand :</strong> ${pair.left} | <strong>Français :</strong> ${pair.right}</p>`;
         });
-
-        // Interroge l'utilisateur (facultatif)
-        startQuiz(pairs);
     } catch (error) {
         console.error('Erreur détaillée :', error);
         outputDiv.innerHTML = `<h3>Erreur :</h3><p>${error.message}</p>`;
     }
 });
-
-// Fonction pour interroger l'utilisateur
-function startQuiz(pairs) {
-    const quizDiv = document.createElement('div');
-    quizDiv.id = 'quiz';
-    document.body.appendChild(quizDiv);
-
-    let index = 0;
-
-    const askQuestion = () => {
-        if (index >= pairs.length) {
-            quizDiv.innerHTML = `<h3>Quiz terminé !</h3>`;
-            return;
-        }
-
-        const pair = pairs[index];
-        quizDiv.innerHTML = `
-            <p>Traduisez : <strong>${pair.left}</strong></p>
-            <input type="text" id="answer" placeholder="Votre réponse">
-            <button id="submitAnswer">Valider</button>
-        `;
-
-        document.getElementById('submitAnswer').addEventListener('click', () => {
-            const answer = document.getElementById('answer').value.trim();
-            if (answer.toLowerCase() === pair.right.toLowerCase()) {
-                alert('Bonne réponse !');
-            } else {
-                alert(`Faux. La bonne réponse était : ${pair.right}`);
-            }
-            index++;
-            askQuestion();
-        });
-    };
-
-    askQuestion();
-}
