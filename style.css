@@ -29,3 +29,13 @@ form {
     text-align: left;
     word-wrap: break-word;
 }
+#quiz {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+#quiz input {
+    padding: 5px;
+    margin-right: 10px;
+}
