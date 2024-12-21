@@ -16,37 +16,21 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const image = URL.createObjectURL(file); // Crée une URL temporaire pour l'image
     outputDiv.innerHTML += `<p>Étape 2 : Image préparée pour l'analyse.</p>`;
 
-    // Charger Tesseract.js
-    const { createWorker } = Tesseract; // Importer la fonction createWorker depuis Tesseract.js
-    const worker = createWorker(); // Crée un nouveau worker pour exécuter l'analyse OCR
-
     try {
-        // Étape 3 : Charger le worker
-        outputDiv.innerHTML += `<p>Étape 3 : Chargement de Tesseract.js...</p>`;
-        await worker.load();
-        outputDiv.innerHTML += `<p>Étape 3 : Tesseract.js chargé avec succès.</p>`;
-
-        // Étape 4 : Charger et initialiser la langue
-        outputDiv.innerHTML += `<p>Étape 4 : Chargement des données linguistiques...</p>`;
-        await worker.loadLanguage('eng'); // Langue : anglais (ou 'deu' pour l'allemand)
-        await worker.initialize('eng');
-        outputDiv.innerHTML += `<p>Étape 4 : Données linguistiques chargées avec succès.</p>`;
-
-        // Étape 5 : Analyser l'image
-        outputDiv.innerHTML += `<p>Étape 5 : Analyse de l'image en cours...</p>`;
-        const { data: { text } } = await worker.recognize(image); // Effectuer l'OCR et récupérer le texte extrait
-        outputDiv.innerHTML += `<p>Étape 5 : Analyse terminée avec succès.</p>`;
+        // Étape 3 : Charger et analyser l'image avec Tesseract.js
+        outputDiv.innerHTML += `<p>Étape 3 : Analyse de l'image en cours...</p>`;
+        const result = await Tesseract.recognize(image, 'eng', {
+            logger: (info) => {
+                console.log(info); // Affiche les logs de progression dans la console
+                outputDiv.innerHTML += `<p>Progression : ${Math.round(info.progress * 100)}%</p>`;
+            },
+        });
+        outputDiv.innerHTML += `<p>Étape 3 : Analyse terminée avec succès.</p>`;
 
         // Afficher le texte extrait
-        outputDiv.innerHTML += `<h3>Texte extrait :</h3><p>${text}</p>`;
+        outputDiv.innerHTML += `<h3>Texte extrait :</h3><p>${result.data.text}</p>`;
     } catch (error) {
-        // En cas d'erreur, afficher un message clair pour chaque étape
-        console.error('Erreur détaillée :', error);
+        console.error('Erreur détaillée :', error); // Affiche l'erreur dans la console
         outputDiv.innerHTML += `<h3>Erreur :</h3><p>${error.message}</p>`;
-    } finally {
-        // Étape 6 : Libérer les ressources
-        outputDiv.innerHTML += `<p>Étape 6 : Libération des ressources...</p>`;
-        await worker.terminate();
-        outputDiv.innerHTML += `<p>Étape 6 : Ressources libérées avec succès.</p>`;
     }
 });
