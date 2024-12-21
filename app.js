@@ -10,6 +10,9 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         return; // Arrête l'exécution
     }
 
+    // Affiche le message "Analyse en cours..."
+    outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
+
     // Prépare l'image pour l'analyse
     const file = fileInput.files[0];
     const image = URL.createObjectURL(file); // Crée une URL temporaire pour l'image
@@ -18,10 +21,10 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         // Analyse l'image avec Tesseract.js
         const result = await Tesseract.recognize(image, 'eng'); // Langue anglaise par défaut
 
-        // Affiche le texte extrait
+        // Remplace le message par le texte extrait
         outputDiv.innerHTML = `<h3>Texte extrait :</h3><p>${result.data.text}</p>`;
     } catch (error) {
-        // Gestion des erreurs
+        // Remplace le message par un message d'erreur
         console.error('Erreur détaillée :', error);
         outputDiv.innerHTML = `<h3>Erreur :</h3><p>${error.message}</p>`;
     }
