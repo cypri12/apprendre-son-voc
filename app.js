@@ -9,28 +9,33 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         outputDiv.innerHTML = `<h3>Erreur :</h3><p>Veuillez choisir une image.</p>`;
         return; // Arrête l'exécution
     }
-    outputDiv.innerHTML = `<p>Étape 1 : Fichier sélectionné avec succès.</p>`;
+    outputDiv.innerHTML = `<p>Fichier sélectionné avec succès. Analyse en cours...</p>`;
 
-    // Étape 2 : Préparer l'image pour l'analyse
     const file = fileInput.files[0];
-    const image = URL.createObjectURL(file); // Crée une URL temporaire pour l'image
-    outputDiv.innerHTML += `<p>Étape 2 : Image préparée pour l'analyse.</p>`;
+    const formData = new FormData();
+    formData.append('apikey', 'VOTRE_CLE_API'); // Remplace par ta clé API
+    formData.append('language', 'eng'); // Spécifie la langue (par ex. 'eng' pour anglais ou 'fre' pour français)
+    formData.append('file', file);
 
     try {
-        // Étape 3 : Charger et analyser l'image avec Tesseract.js
-        outputDiv.innerHTML += `<p>Étape 3 : Analyse de l'image en cours...</p>`;
-        const result = await Tesseract.recognize(image, 'eng', {
-            logger: (info) => {
-                console.log(info); // Affiche les logs de progression dans la console
-                outputDiv.innerHTML += `<p>Progression : ${Math.round(info.progress * 100)}%</p>`;
-            },
+        // Envoi de la requête à l'API OCR.space
+        const response = await fetch('https://api.ocr.space/parse/image', {
+            method: 'POST',
+            body: formData,
         });
-        outputDiv.innerHTML += `<p>Étape 3 : Analyse terminée avec succès.</p>`;
+
+        const result = await response.json();
+
+        // Vérifier si l'analyse a réussi
+        if (result.IsErroredOnProcessing) {
+            throw new Error(result.ErrorMessage || 'Une erreur est survenue lors du traitement.');
+        }
 
         // Afficher le texte extrait
-        outputDiv.innerHTML += `<h3>Texte extrait :</h3><p>${result.data.text}</p>`;
+        const text = result.ParsedResults[0].ParsedText;
+        outputDiv.innerHTML = `<h3>Texte extrait :</h3><p>${text}</p>`;
     } catch (error) {
-        console.error('Erreur détaillée :', error); // Affiche l'erreur dans la console
-        outputDiv.innerHTML += `<h3>Erreur :</h3><p>${error.message}</p>`;
+        console.error('Erreur détaillée :', error);
+        outputDiv.innerHTML = `<h3>Erreur :</h3><p>${error.message}</p>`;
     }
 });
