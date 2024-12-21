@@ -23,7 +23,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     try {
         // Étape 3 : Charger le worker
         outputDiv.innerHTML += `<p>Étape 3 : Chargement de Tesseract.js...</p>`;
-        await worker.load(); // Charger le worker
+        await worker.load();
         outputDiv.innerHTML += `<p>Étape 3 : Tesseract.js chargé avec succès.</p>`;
 
         // Étape 4 : Charger et initialiser la langue
