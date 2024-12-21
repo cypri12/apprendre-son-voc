@@ -17,13 +17,13 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     outputDiv.innerHTML += `<p>Étape 2 : Image préparée pour l'analyse.</p>`;
 
     // Charger Tesseract.js
-    const { createWorker } = Tesseract; // Importer la fonction createWorker
+    const { createWorker } = Tesseract; // Importer la fonction createWorker depuis Tesseract.js
     const worker = createWorker(); // Crée un nouveau worker pour exécuter l'analyse OCR
 
     try {
         // Étape 3 : Charger le worker
         outputDiv.innerHTML += `<p>Étape 3 : Chargement de Tesseract.js...</p>`;
-        await worker.load();
+        await worker.load(); // Charger le worker
         outputDiv.innerHTML += `<p>Étape 3 : Tesseract.js chargé avec succès.</p>`;
 
         // Étape 4 : Charger et initialiser la langue
