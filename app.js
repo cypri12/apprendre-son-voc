@@ -1,41 +1,8 @@
-function splitImage(image, callback) {
-    const img = new Image();
-    img.src = image;
-    img.onload = () => {
-        const canvasLeft = document.createElement('canvas');
-        const canvasRight = document.createElement('canvas');
-
-        const ctxLeft = canvasLeft.getContext('2d');
-        const ctxRight = canvasRight.getContext('2d');
-
-        // Dimensions pour découper en deux colonnes
-        const width = img.width / 2;
-        const height = img.height;
-
-        canvasLeft.width = width;
-        canvasLeft.height = height;
-        canvasRight.width = width;
-        canvasRight.height = height;
-
-        // Découpe la partie gauche
-        ctxLeft.drawImage(img, 0, 0, width, height, 0, 0, width, height);
-        // Découpe la partie droite
-        ctxRight.drawImage(img, width, 0, width, height, 0, 0, width, height);
-
-        // Convertit en base64 pour passer à Tesseract.js
-        const leftImage = canvasLeft.toDataURL();
-        const rightImage = canvasRight.toDataURL();
-
-        callback(leftImage, rightImage);
-    };
-}
-
-// Utilisation de la fonction pour analyser chaque colonne séparément
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Empêche le rechargement de la page
 
     const fileInput = document.getElementById('imageInput');
-    const outputDiv = document.getElementById('output');
+    const outputDiv = document.getElementById('output'); // Zone d'affichage
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<h3>Erreur :</h3><p>Veuillez choisir une image.</p>`;
@@ -46,24 +13,19 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const file = fileInput.files[0];
     const image = URL.createObjectURL(file);
 
-    splitImage(image, async (leftImage, rightImage) => {
-        try {
-            // Analyse de la colonne gauche
-            const leftResult = await Tesseract.recognize(leftImage, 'deu+fra', {
-                logger: (info) => console.log(info),
-            });
+    try {
+        // Analyse OCR avec Tesseract.js
+        const result = await Tesseract.recognize(image, 'deu+fra', {
+            logger: (info) => console.log(info), // Logs de progression
+            tessedit_pageseg_mode: 4, // Mode pour détecter les colonnes
+        });
 
-            // Analyse de la colonne droite
-            const rightResult = await Tesseract.recognize(rightImage, 'deu+fra', {
-                logger: (info) => console.log(info),
-            });
-
-            // Affichage des résultats
-            outputDiv.innerHTML = `<h3>Texte extrait (Colonne gauche) :</h3><pre>${leftResult.data.text}</pre>`;
-            outputDiv.innerHTML += `<h3>Texte extrait (Colonne droite) :</h3><pre>${rightResult.data.text}</pre>`;
-        } catch (error) {
-            console.error('Erreur détaillée :', error);
-            outputDiv.innerHTML = `<h3>Erreur :</h3><p>${error.message}</p>`;
-        }
-    });
+        // Affiche le texte brut extrait
+        const rawText = result.data.text;
+        console.log('Texte brut extrait :', rawText);
+        outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${rawText}</pre>`;
+    } catch (error) {
+        console.error('Erreur détaillée :', error); // Affiche l'erreur dans la console
+        outputDiv.innerHTML = `<h3>Erreur :</h3><p>${error.message}</p>`; // Affiche un message d'erreur
+    }
 });
