@@ -17,7 +17,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         // Analyse OCR avec Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
             logger: (info) => console.log(info), // Logs de progression
-            tessedit_pageseg_mode: 6, // Mode pour détecter les colonnes
+            tessedit_pageseg_mode: 1, // Mode pour détecter les colonnes
         });
 
         // Affiche le texte brut extrait
