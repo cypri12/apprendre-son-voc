@@ -13,29 +13,31 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const file = fileInput.files[0];
     const image = URL.createObjectURL(file);
 
-    // Fonction pour détecter la langue via ton serveur proxy
-    async function detectLanguageWithProxy(text) {
-        const proxyURL = "http://localhost:3000/detect"; // URL de ton serveur proxy
-
-        const response = await fetch(proxyURL, {
+    async function detectLanguageWithLibreTranslate(text) {
+        const response = await fetch("https://fr.libretranslate.com/translate", {
             method: "POST",
             body: JSON.stringify({
-                q: text, // Texte à détecter
-                source: "auto",
+                q: text, // Texte à analyser
+                source: "auto", // Auto-détecte la langue
                 target: "fr", // On traduit en français pour valider la langue
                 format: "text",
+                api_key: "", // Clé API (vide si non requise)
             }),
             headers: { "Content-Type": "application/json" },
         });
 
+        if (!response.ok) {
+            throw new Error(`Erreur API LibreTranslate : ${response.statusText}`);
+        }
+
         const result = await response.json();
-        return result[0]?.language; // Retourne le code langue détecté (ex. : 'de', 'fr')
+        return result.source; // Retourne la langue détectée ('fr', 'de', etc.)
     }
 
     try {
         // Analyse OCR avec Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
-            logger: (info) => console.log(info), // Logs de progression
+            logger: (info) => console.log(info),
         });
 
         // Texte brut extrait
@@ -52,7 +54,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         const unknownLines = [];
 
         for (const line of lines) {
-            const lang = await detectLanguageWithProxy(line);
+            const lang = await detectLanguageWithLibreTranslate(line);
             console.log(`Langue détectée pour "${line}": ${lang}`);
             if (lang === 'de') {
                 germanLines.push(line);
