@@ -13,10 +13,28 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const file = fileInput.files[0];
     const image = URL.createObjectURL(file);
 
+    // Fonction pour auto-détecter la langue via LibreTranslate
+    async function detectLanguageWithAuto(text) {
+        const response = await fetch("https://fr.libretranslate.com/translate", {
+            method: "POST",
+            body: JSON.stringify({
+                q: text,
+                source: "auto",
+                target: "fr", // On traduit en français pour valider la langue
+                format: "text",
+                api_key: "", // Si requis, ajoute une clé API
+            }),
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const result = await response.json();
+        return result.source; // Retourne le code langue détecté (ex. : 'de', 'fr')
+    }
+
     try {
         // Analyse OCR avec Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
-            logger: (info) => console.log(info),
+            logger: (info) => console.log(info), // Logs de progression
         });
 
         // Texte brut extrait
@@ -27,25 +45,14 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         const lines = rawText.split('\n').filter((line) => line.trim() !== '');
         console.log('Lignes détectées :', lines);
 
-        // Fonction pour détecter la langue avec LibreTranslate
-        async function detectLanguage(text) {
-            const response = await fetch('https://libretranslate.de/detect', {
-                method: 'POST',
-                body: JSON.stringify({ q: text }),
-                headers: { 'Content-Type': 'application/json' },
-            });
-
-            const result = await response.json();
-            return result[0]?.language; // Retourne le code langue ('de' pour allemand, 'fr' pour français)
-        }
-
         // Classe les lignes par langue
         const germanLines = [];
         const frenchLines = [];
         const unknownLines = [];
 
         for (const line of lines) {
-            const lang = await detectLanguage(line);
+            const lang = await detectLanguageWithAuto(line);
+            console.log(`Langue détectée pour "${line}": ${lang}`);
             if (lang === 'de') {
                 germanLines.push(line);
             } else if (lang === 'fr') {
