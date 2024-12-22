@@ -13,22 +13,23 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const file = fileInput.files[0];
     const image = URL.createObjectURL(file);
 
-    // Fonction pour auto-détecter la langue via LibreTranslate
-    async function detectLanguageWithAuto(text) {
-        const response = await fetch("https://fr.libretranslate.com/translate", {
+    // Fonction pour détecter la langue via ton serveur proxy
+    async function detectLanguageWithProxy(text) {
+        const proxyURL = "http://localhost:3000/detect"; // URL de ton serveur proxy
+
+        const response = await fetch(proxyURL, {
             method: "POST",
             body: JSON.stringify({
-                q: text,
+                q: text, // Texte à détecter
                 source: "auto",
                 target: "fr", // On traduit en français pour valider la langue
                 format: "text",
-                api_key: "", // Si requis, ajoute une clé API
             }),
             headers: { "Content-Type": "application/json" },
         });
 
         const result = await response.json();
-        return result.source; // Retourne le code langue détecté (ex. : 'de', 'fr')
+        return result[0]?.language; // Retourne le code langue détecté (ex. : 'de', 'fr')
     }
 
     try {
@@ -51,7 +52,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         const unknownLines = [];
 
         for (const line of lines) {
-            const lang = await detectLanguageWithAuto(line);
+            const lang = await detectLanguageWithProxy(line);
             console.log(`Langue détectée pour "${line}": ${lang}`);
             if (lang === 'de') {
                 germanLines.push(line);
