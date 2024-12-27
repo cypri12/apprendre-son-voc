@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
-    <script src="app.js" defer></script>
-    <title>OCR - Texte brut</title>
+    <title>Analyse de texte</title>
 </head>
 <body>
-    <h1>OCR avec Tesseract.js</h1>
-
-    <!-- Formulaire pour uploader une image -->
+    <h1>Analyse de texte - Allemand et Français</h1>
     <form id="uploadForm">
-        <input type="file" accept="image/*" id="imageInput"> <!-- Choix du fichier -->
-        <button type="submit">Analyser l'image</button> <!-- Bouton pour analyser -->
+        <label for="imageInput">Chargez une image :</label>
+        <input type="file" id="imageInput" accept="image/*" required><br><br>
+
+        <p>Quel côté contient le texte en allemand ?</p>
+        <label><input type="radio" name="langSide" value="left" required> Gauche</label>
+        <label><input type="radio" name="langSide" value="right"> Droite</label><br><br>
+
+        <button type="submit">Analyser</button>
     </form>
 
-    <!-- Zone pour afficher les résultats -->
     <div id="output"></div>
+
+    <script src="app.js"></script>
 </body>
 </html>
