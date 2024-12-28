@@ -3,7 +3,14 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 
     const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output');
-    const langSide = document.querySelector('input[name="langSide"]:checked').value;
+
+    // Récupérer la langue choisie
+    const langSideInput = document.querySelector('input[name="langSide"]:checked');
+    if (!langSideInput) {
+        outputDiv.innerHTML = `<p>Veuillez sélectionner quel côté contient le texte en allemand.</p>`;
+        return;
+    }
+    const langSide = langSideInput.value;
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
@@ -14,13 +21,6 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const image = URL.createObjectURL(file);
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
-
-    // Vérifier que Tesseract.js est bien chargé
-    if (typeof Tesseract === 'undefined') {
-        outputDiv.innerHTML = `<p>Erreur : Tesseract.js n'est pas chargé. Vérifiez le lien CDN.</p>`;
-        console.error("Tesseract.js n'est pas défini.");
-        return;
-    }
 
     try {
         // Analyser l'image avec Tesseract.js
