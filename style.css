@@ -1,41 +1,43 @@
-/* Styles généraux */
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 20px;
-    background-color: #f4f4f9;
-    color: #333;
+.card {
+  overflow: visible;
+  width: 190px;
+  height: 254px;
+  perspective: 1000px;
+  margin: 10px;
+  display: inline-block;
 }
 
-/* Titre principal */
-h1 {
-    color: #4CAF50;
+.content {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 300ms;
+  box-shadow: 0px 0px 10px 1px #000000ee;
+  border-radius: 5px;
+  position: relative;
 }
 
-/* Formulaire */
-form {
-    margin-top: 20px;
+.front,
+.back {
+  background-color: #151515;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
 }
 
-/* Zone des résultats */
-#output {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-    word-wrap: break-word;
+.back {
+  transform: rotateY(180deg);
 }
-#quiz {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-}
-#quiz input {
-    padding: 5px;
-    margin-right: 10px;
+
+.card:hover .content {
+  transform: rotateY(180deg);
 }
