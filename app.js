@@ -5,8 +5,9 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 
     const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output');
-    const separateButton = document.getElementById('separateButton');
+    const askSideButton = document.getElementById('askSideButton');
     const separationResult = document.getElementById('separationResult');
+    const languageChoice = document.getElementById('languageChoice');
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
@@ -18,7 +19,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
     separationResult.innerHTML = ''; // Réinitialiser le résultat précédent
-    separateButton.style.display = 'none'; // Cacher le bouton de séparation
+    askSideButton.style.display = 'none'; // Cacher le bouton de choix des côtés
+    languageChoice.style.display = 'none'; // Cacher la section de sélection des côtés
 
     try {
         // Analyser l'image avec Tesseract.js
@@ -33,17 +35,31 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         // Afficher le texte brut
         outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedText}</pre>`;
 
-        // Afficher le bouton de séparation
-        separateButton.style.display = 'block';
+        // Afficher le bouton pour demander les côtés
+        askSideButton.style.display = 'block';
     } catch (error) {
         console.error('Erreur lors de l\'analyse :', error);
         outputDiv.innerHTML = `<p>Erreur lors de l'analyse. Veuillez réessayer.</p>`;
     }
 });
 
-// Séparation du texte brut en deux parties : français et allemand
-document.getElementById('separateButton').addEventListener('click', () => {
+// Afficher les options pour spécifier les côtés
+document.getElementById('askSideButton').addEventListener('click', () => {
+    const languageChoice = document.getElementById('languageChoice');
+    languageChoice.style.display = 'block';
+});
+
+// Séparer le texte selon le choix de l'utilisateur
+document.getElementById('confirmSideButton').addEventListener('click', () => {
     const separationResult = document.getElementById('separationResult');
+    const langSideInput = document.querySelector('input[name="langSide"]:checked');
+
+    if (!langSideInput) {
+        separationResult.innerHTML = `<p>Veuillez sélectionner quel côté contient le texte en français.</p>`;
+        return;
+    }
+
+    const langSide = langSideInput.value;
 
     if (!extractedText) {
         separationResult.innerHTML = `<p>Aucun texte à séparer. Analysez une image d'abord.</p>`;
@@ -58,14 +74,24 @@ document.getElementById('separateButton').addEventListener('click', () => {
     const leftColumn = lines.slice(0, midIndex);
     const rightColumn = lines.slice(midIndex);
 
+    // Classer en fonction du choix de l'utilisateur
+    let frenchText, germanText;
+    if (langSide === 'left') {
+        frenchText = leftColumn;
+        germanText = rightColumn;
+    } else {
+        frenchText = rightColumn;
+        germanText = leftColumn;
+    }
+
     // Afficher les résultats séparés
     separationResult.innerHTML = `<h3>Texte en Français :</h3>`;
-    leftColumn.forEach((line) => {
+    frenchText.forEach((line) => {
         separationResult.innerHTML += `<p>${line}</p>`;
     });
 
     separationResult.innerHTML += `<h3>Texte en Allemand :</h3>`;
-    rightColumn.forEach((line) => {
+    germanText.forEach((line) => {
         separationResult.innerHTML += `<p>${line}</p>`;
     });
 });
