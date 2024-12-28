@@ -21,14 +21,25 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     languageChoice.style.display = 'none'; // Masquer la section de choix des côtés
 
     try {
-        // Analyser l'image avec Tesseract.js
+        // Analyse de l'image avec Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
             logger: (info) => console.log(info),
         });
 
+        // Vérification des résultats
+        if (!result.data || !result.data.text) {
+            outputDiv.innerHTML = `<p>Aucune donnée extraite. Vérifiez l'image.</p>`;
+            return;
+        }
+
         // Stocker les lignes extraites
         extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
         console.log('Lignes extraites :', extractedLines);
+
+        if (extractedLines.length === 0) {
+            outputDiv.innerHTML = `<p>Texte non détecté dans l'image. Veuillez essayer une autre image.</p>`;
+            return;
+        }
 
         // Afficher le texte brut
         outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedLines.join('\n')}</pre>`;
@@ -71,8 +82,16 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
                 frenchText.push(parts[1].trim());
                 germanText.push(parts[0].trim());
             }
+        } else {
+            console.warn(`Ligne ignorée : ${line}`);
         }
     });
+
+    // Vérification des résultats de la séparation
+    if (frenchText.length === 0 && germanText.length === 0) {
+        separationResult.innerHTML = `<p>Aucune ligne avec un tiret détectée. Vérifiez le format du texte extrait.</p>`;
+        return;
+    }
 
     // Afficher les résultats séparés
     separationResult.innerHTML = `<h3>Texte en Français :</h3>`;
