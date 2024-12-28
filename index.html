@@ -18,7 +18,14 @@
 
     <div id="output"></div>
 
-    <button id="separateButton" style="display: none;">Séparer en Français et Allemand</button>
+    <button id="askSideButton" style="display: none;">Spécifier les côtés</button>
+
+    <div id="languageChoice" style="display: none;">
+        <p>Quel côté contient le texte en français ?</p>
+        <label><input type="radio" name="langSide" value="left" required> Gauche</label>
+        <label><input type="radio" name="langSide" value="right"> Droite</label>
+        <button id="confirmSideButton">Confirmer</button>
+    </div>
 
     <div id="separationResult"></div>
 
