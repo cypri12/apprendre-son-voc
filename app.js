@@ -1,4 +1,7 @@
 let extractedLines = []; // Stocker les lignes extraites
+let frenchWords = []; // Stocker les mots en français
+let germanWords = []; // Stocker les mots en allemand
+let currentQuestionIndex = 0; // Index de la question actuelle
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -7,6 +10,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const outputDiv = document.getElementById('output');
     const languageChoice = document.getElementById('languageChoice');
     const separationResult = document.getElementById('separationResult');
+    const startQuizButton = document.getElementById('startQuizButton');
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
@@ -19,18 +23,13 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
     separationResult.innerHTML = ''; // Réinitialiser les résultats précédents
     languageChoice.style.display = 'none'; // Masquer la section de choix des côtés
+    startQuizButton.style.display = 'none'; // Masquer le bouton de quiz
 
     try {
         // Analyse de l'image avec Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
             logger: (info) => console.log(info),
         });
-
-        // Vérification des résultats
-        if (!result.data || !result.data.text) {
-            outputDiv.innerHTML = `<p>Aucune donnée extraite. Vérifiez l'image.</p>`;
-            return;
-        }
 
         // Stocker les lignes extraites
         extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
@@ -55,6 +54,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 // Séparer les lignes selon les tirets
 document.getElementById('confirmSideButton').addEventListener('click', () => {
     const separationResult = document.getElementById('separationResult');
+    const startQuizButton = document.getElementById('startQuizButton');
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
     if (!langSideInput) {
@@ -69,38 +69,75 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
         return;
     }
 
+    frenchWords = [];
+    germanWords = [];
+
     // Diviser chaque ligne en fonction du tiret
-    const frenchText = [];
-    const germanText = [];
     extractedLines.forEach(line => {
         const parts = line.split('-'); // Supposons que les colonnes sont séparées par un tiret
         if (parts.length === 2) {
             if (langSide === 'left') {
-                frenchText.push(parts[0].trim());
-                germanText.push(parts[1].trim());
+                frenchWords.push(parts[0].trim());
+                germanWords.push(parts[1].trim());
             } else {
-                frenchText.push(parts[1].trim());
-                germanText.push(parts[0].trim());
+                frenchWords.push(parts[1].trim());
+                germanWords.push(parts[0].trim());
             }
-        } else {
-            console.warn(`Ligne ignorée : ${line}`);
         }
     });
 
-    // Vérification des résultats de la séparation
-    if (frenchText.length === 0 && germanText.length === 0) {
-        separationResult.innerHTML = `<p>Aucune ligne avec un tiret détectée. Vérifiez le format du texte extrait.</p>`;
+    // Vérification des résultats
+    if (frenchWords.length === 0 || germanWords.length === 0) {
+        separationResult.innerHTML = `<p>Aucune ligne valide détectée. Vérifiez le format du texte extrait.</p>`;
         return;
     }
 
     // Afficher les résultats séparés
     separationResult.innerHTML = `<h3>Texte en Français :</h3>`;
-    frenchText.forEach(line => {
-        separationResult.innerHTML += `<p>${line}</p>`;
+    frenchWords.forEach(word => {
+        separationResult.innerHTML += `<p>${word}</p>`;
     });
 
     separationResult.innerHTML += `<h3>Texte en Allemand :</h3>`;
-    germanText.forEach(line => {
-        separationResult.innerHTML += `<p>${line}</p>`;
+    germanWords.forEach(word => {
+        separationResult.innerHTML += `<p>${word}</p>`;
     });
+
+    // Afficher le bouton pour démarrer le quiz
+    startQuizButton.style.display = 'block';
+});
+
+// Démarrer le quiz
+document.getElementById('startQuizButton').addEventListener('click', () => {
+    currentQuestionIndex = 0; // Réinitialiser l'index des questions
+    document.getElementById('quizSection').style.display = 'block';
+    document.getElementById('feedback').innerText = ''; // Réinitialiser le feedback
+    showQuestion();
+});
+
+// Afficher une question
+function showQuestion() {
+    if (currentQuestionIndex >= frenchWords.length) {
+        document.getElementById('quizSection').innerHTML = `<p>Quiz terminé ! Félicitations.</p>`;
+        return;
+    }
+
+    const question = `Traduisez : ${frenchWords[currentQuestionIndex]}`;
+    document.getElementById('question').innerText = question;
+}
+
+// Valider une réponse
+document.getElementById('submitAnswerButton').addEventListener('click', () => {
+    const userAnswer = document.getElementById('answerInput').value.trim();
+    const correctAnswer = germanWords[currentQuestionIndex];
+
+    if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+        document.getElementById('feedback').innerText = 'Correct !';
+    } else {
+        document.getElementById('feedback').innerText = `Incorrect. La bonne réponse était : ${correctAnswer}`;
+    }
+
+    currentQuestionIndex++;
+    document.getElementById('answerInput').value = ''; // Réinitialiser le champ de réponse
+    showQuestion();
 });
