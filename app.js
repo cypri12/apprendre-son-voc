@@ -1,4 +1,4 @@
-let extractedData = null; // Stocker les données extraites par Tesseract.js
+let extractedLines = []; // Stocker les lignes extraites
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -26,12 +26,12 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
             logger: (info) => console.log(info),
         });
 
-        // Stocker les données extraites
-        extractedData = result.data;
-        console.log('Données extraites :', extractedData);
+        // Stocker les lignes extraites
+        extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
+        console.log('Lignes extraites :', extractedLines);
 
-        // Afficher le texte brut extrait
-        outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedData.text}</pre>`;
+        // Afficher le texte brut
+        outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedLines.join('\n')}</pre>`;
 
         // Afficher la section pour demander les côtés
         languageChoice.style.display = 'block';
@@ -41,7 +41,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     }
 });
 
-// Séparer le texte selon les colonnes
+// Séparer les lignes en colonnes gauche et droite
 document.getElementById('confirmSideButton').addEventListener('click', () => {
     const separationResult = document.getElementById('separationResult');
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
@@ -53,39 +53,26 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
 
     const langSide = langSideInput.value;
 
-    if (!extractedData) {
+    if (extractedLines.length === 0) {
         separationResult.innerHTML = `<p>Aucune donnée à séparer. Analysez une image d'abord.</p>`;
         return;
     }
 
-    // Obtenir les mots extraits avec leurs positions
-    const words = extractedData.words;
-
-    // Trouver le centre horizontal moyen de l'image
-    const centerX = (Math.max(...words.map(w => w.bbox.x1)) + Math.min(...words.map(w => w.bbox.x0))) / 2;
-
-    // Classer les mots en colonnes gauche et droite
-    const leftColumn = [];
-    const rightColumn = [];
-
-    words.forEach(word => {
-        const wordCenterX = (word.bbox.x0 + word.bbox.x1) / 2;
-        if (wordCenterX < centerX) {
-            leftColumn.push(word.text);
-        } else {
-            rightColumn.push(word.text);
+    // Diviser les lignes en colonnes gauche et droite
+    const frenchText = [];
+    const germanText = [];
+    extractedLines.forEach(line => {
+        const parts = line.split('\t'); // Supposons que les colonnes sont séparées par des tabulations
+        if (parts.length === 2) {
+            if (langSide === 'left') {
+                frenchText.push(parts[0]);
+                germanText.push(parts[1]);
+            } else {
+                frenchText.push(parts[1]);
+                germanText.push(parts[0]);
+            }
         }
     });
-
-    // Classer en fonction du choix de l'utilisateur
-    let frenchText, germanText;
-    if (langSide === 'left') {
-        frenchText = leftColumn;
-        germanText = rightColumn;
-    } else {
-        frenchText = rightColumn;
-        germanText = leftColumn;
-    }
 
     // Afficher les résultats séparés
     separationResult.innerHTML = `<h3>Texte en Français :</h3>`;
