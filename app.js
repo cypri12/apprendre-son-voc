@@ -5,9 +5,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 
     const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output');
-    const askSideButton = document.getElementById('askSideButton');
-    const separationResult = document.getElementById('separationResult');
     const languageChoice = document.getElementById('languageChoice');
+    const separationResult = document.getElementById('separationResult');
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
@@ -19,8 +18,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
     separationResult.innerHTML = ''; // Réinitialiser le résultat précédent
-    askSideButton.style.display = 'none'; // Cacher le bouton de choix des côtés
-    languageChoice.style.display = 'none'; // Cacher la section de sélection des côtés
+    languageChoice.style.display = 'none'; // Cacher la section de choix des côtés
 
     try {
         // Analyser l'image avec Tesseract.js
@@ -35,18 +33,12 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         // Afficher le texte brut
         outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedText}</pre>`;
 
-        // Afficher le bouton pour demander les côtés
-        askSideButton.style.display = 'block';
+        // Afficher la section pour demander les côtés
+        languageChoice.style.display = 'block';
     } catch (error) {
         console.error('Erreur lors de l\'analyse :', error);
         outputDiv.innerHTML = `<p>Erreur lors de l'analyse. Veuillez réessayer.</p>`;
     }
-});
-
-// Afficher les options pour spécifier les côtés
-document.getElementById('askSideButton').addEventListener('click', () => {
-    const languageChoice = document.getElementById('languageChoice');
-    languageChoice.style.display = 'block';
 });
 
 // Séparer le texte selon le choix de l'utilisateur
