@@ -131,10 +131,17 @@ document.getElementById('submitAnswerButton').addEventListener('click', () => {
     const userAnswer = document.getElementById('answerInput').value.trim();
     const correctAnswer = germanWords[currentQuestionIndex];
 
+    const feedback = document.getElementById('feedback');
+
+    if (!userAnswer) {
+        feedback.innerText = 'Veuillez entrer une réponse !';
+        return;
+    }
+
     if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-        document.getElementById('feedback').innerText = 'Correct !';
+        feedback.innerText = 'Correct ! 😊';
     } else {
-        document.getElementById('feedback').innerText = `Incorrect. La bonne réponse était : ${correctAnswer}`;
+        feedback.innerText = `Incorrect. La bonne réponse était : ${correctAnswer}`;
     }
 
     currentQuestionIndex++;
