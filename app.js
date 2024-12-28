@@ -41,13 +41,13 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     }
 });
 
-// Séparer les lignes en colonnes gauche et droite
+// Séparer les lignes selon les tirets
 document.getElementById('confirmSideButton').addEventListener('click', () => {
     const separationResult = document.getElementById('separationResult');
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
     if (!langSideInput) {
-        separationResult.innerHTML = `<p>Veuillez sélectionner quel côté contient le texte en français.</p>`;
+        separationResult.innerHTML = `<p>Veuillez sélectionner de quel côté se trouve le texte en français.</p>`;
         return;
     }
 
@@ -58,18 +58,18 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
         return;
     }
 
-    // Diviser les lignes en colonnes gauche et droite
+    // Diviser chaque ligne en fonction du tiret
     const frenchText = [];
     const germanText = [];
     extractedLines.forEach(line => {
-        const parts = line.split('\t'); // Supposons que les colonnes sont séparées par des tabulations
+        const parts = line.split('-'); // Supposons que les colonnes sont séparées par un tiret
         if (parts.length === 2) {
             if (langSide === 'left') {
-                frenchText.push(parts[0]);
-                germanText.push(parts[1]);
+                frenchText.push(parts[0].trim());
+                germanText.push(parts[1].trim());
             } else {
-                frenchText.push(parts[1]);
-                germanText.push(parts[0]);
+                frenchText.push(parts[1].trim());
+                germanText.push(parts[0].trim());
             }
         }
     });
