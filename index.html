@@ -3,26 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyse de texte - Allemand et Français</title>
-    <!-- Inclusion de Tesseract.js depuis un CDN -->
+    <title>Analyse de texte</title>
+    <!-- Inclusion de Tesseract.js -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
-    <h1>Analyse de texte - Allemand et Français</h1>
+    <h1>Analyse de texte - Français et Allemand</h1>
+
     <form id="uploadForm">
         <label for="imageInput">Chargez une image :</label>
         <input type="file" id="imageInput" accept="image/*" required><br><br>
-
-        <p>Quel côté contient le texte en allemand ?</p>
-        <label><input type="radio" name="langSide" value="left" required> Gauche</label>
-        <label><input type="radio" name="langSide" value="right"> Droite</label><br><br>
-
-        <button type="submit">Analyser</button>
+        <button type="submit">Analyser l'image</button>
     </form>
 
     <div id="output"></div>
 
-    <!-- Inclusion du fichier JavaScript -->
+    <button id="separateButton" style="display: none;">Séparer en Français et Allemand</button>
+
+    <div id="separationResult"></div>
+
     <script src="app.js"></script>
 </body>
 </html>
