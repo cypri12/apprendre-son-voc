@@ -1,16 +1,12 @@
+let extractedText = ''; // Stocker le texte brut extrait
+
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output');
-
-    // Récupérer la langue choisie
-    const langSideInput = document.querySelector('input[name="langSide"]:checked');
-    if (!langSideInput) {
-        outputDiv.innerHTML = `<p>Veuillez sélectionner quel côté contient le texte en allemand.</p>`;
-        return;
-    }
-    const langSide = langSideInput.value;
+    const separateButton = document.getElementById('separateButton');
+    const separationResult = document.getElementById('separationResult');
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
@@ -21,6 +17,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const image = URL.createObjectURL(file);
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
+    separationResult.innerHTML = ''; // Réinitialiser le résultat précédent
+    separateButton.style.display = 'none'; // Cacher le bouton de séparation
 
     try {
         // Analyser l'image avec Tesseract.js
@@ -28,40 +26,46 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
             logger: (info) => console.log(info),
         });
 
-        // Texte brut extrait
-        const rawText = result.data.text;
-        console.log('Texte brut extrait :', rawText);
+        // Stocker le texte brut extrait
+        extractedText = result.data.text;
+        console.log('Texte brut extrait :', extractedText);
 
-        // Diviser le texte en lignes
-        const lines = rawText.split('\n').filter((line) => line.trim() !== '');
+        // Afficher le texte brut
+        outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedText}</pre>`;
 
-        // Diviser les lignes en deux colonnes
-        const midIndex = Math.floor(lines.length / 2);
-        const leftColumn = lines.slice(0, midIndex);
-        const rightColumn = lines.slice(midIndex);
-
-        // Classer en fonction du choix de l'utilisateur
-        let germanText, frenchText;
-        if (langSide === 'left') {
-            germanText = leftColumn;
-            frenchText = rightColumn;
-        } else {
-            germanText = rightColumn;
-            frenchText = leftColumn;
-        }
-
-        // Afficher les résultats
-        outputDiv.innerHTML = `<h3>Texte en Allemand :</h3>`;
-        germanText.forEach((line) => {
-            outputDiv.innerHTML += `<p>${line}</p>`;
-        });
-
-        outputDiv.innerHTML += `<h3>Texte en Français :</h3>`;
-        frenchText.forEach((line) => {
-            outputDiv.innerHTML += `<p>${line}</p>`;
-        });
+        // Afficher le bouton de séparation
+        separateButton.style.display = 'block';
     } catch (error) {
         console.error('Erreur lors de l\'analyse :', error);
         outputDiv.innerHTML = `<p>Erreur lors de l'analyse. Veuillez réessayer.</p>`;
     }
+});
+
+// Séparation du texte brut en deux parties : français et allemand
+document.getElementById('separateButton').addEventListener('click', () => {
+    const separationResult = document.getElementById('separationResult');
+
+    if (!extractedText) {
+        separationResult.innerHTML = `<p>Aucun texte à séparer. Analysez une image d'abord.</p>`;
+        return;
+    }
+
+    // Diviser le texte en lignes
+    const lines = extractedText.split('\n').filter((line) => line.trim() !== '');
+
+    // Diviser les lignes en deux colonnes
+    const midIndex = Math.floor(lines.length / 2);
+    const leftColumn = lines.slice(0, midIndex);
+    const rightColumn = lines.slice(midIndex);
+
+    // Afficher les résultats séparés
+    separationResult.innerHTML = `<h3>Texte en Français :</h3>`;
+    leftColumn.forEach((line) => {
+        separationResult.innerHTML += `<p>${line}</p>`;
+    });
+
+    separationResult.innerHTML += `<h3>Texte en Allemand :</h3>`;
+    rightColumn.forEach((line) => {
+        separationResult.innerHTML += `<p>${line}</p>`;
+    });
 });
