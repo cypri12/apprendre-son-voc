@@ -1,7 +1,6 @@
 let extractedLines = []; // Stocker les lignes extraites
 let frenchWords = []; // Stocker les mots en français
 let germanWords = []; // Stocker les mots en allemand
-let currentQuestionIndex = 0; // Index de la question actuelle
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -10,7 +9,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const outputDiv = document.getElementById('output');
     const languageChoice = document.getElementById('languageChoice');
     const separationResult = document.getElementById('separationResult');
-    const startQuizButton = document.getElementById('startQuizButton');
+    const cardContainer = document.getElementById("card-container");
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
@@ -23,7 +22,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
     separationResult.innerHTML = ''; // Réinitialiser les résultats précédents
     languageChoice.style.display = 'none'; // Masquer la section de choix des côtés
-    startQuizButton.style.display = 'none'; // Masquer le bouton de quiz
+    cardContainer.innerHTML = ''; // Réinitialiser les cartes
 
     try {
         // Analyse de l'image avec Tesseract.js
@@ -54,7 +53,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 // Séparer les lignes selon les tirets
 document.getElementById('confirmSideButton').addEventListener('click', () => {
     const separationResult = document.getElementById('separationResult');
-    const startQuizButton = document.getElementById('startQuizButton');
+    const cardContainer = document.getElementById("card-container");
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
     if (!langSideInput) {
@@ -92,59 +91,26 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
         return;
     }
 
-    // Afficher les résultats séparés
-    separationResult.innerHTML = `<h3>Texte en Français :</h3>`;
-    frenchWords.forEach(word => {
-        separationResult.innerHTML += `<p>${word}</p>`;
+    // Générer les cartes dynamiquement
+    frenchWords.forEach((word, index) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const content = document.createElement("div");
+        content.classList.add("content");
+
+        const front = document.createElement("div");
+        front.classList.add("front");
+        front.textContent = word; // Mot en français
+
+        const back = document.createElement("div");
+        back.classList.add("back");
+        back.textContent = germanWords[index]; // Traduction en allemand
+
+        content.appendChild(front);
+        content.appendChild(back);
+        card.appendChild(content);
+
+        cardContainer.appendChild(card);
     });
-
-    separationResult.innerHTML += `<h3>Texte en Allemand :</h3>`;
-    germanWords.forEach(word => {
-        separationResult.innerHTML += `<p>${word}</p>`;
-    });
-
-    // Afficher le bouton pour démarrer le quiz
-    startQuizButton.style.display = 'block';
-});
-
-// Démarrer le quiz
-document.getElementById('startQuizButton').addEventListener('click', () => {
-    currentQuestionIndex = 0; // Réinitialiser l'index des questions
-    document.getElementById('quizSection').style.display = 'block';
-    document.getElementById('feedback').innerText = ''; // Réinitialiser le feedback
-    showQuestion();
-});
-
-// Afficher une question
-function showQuestion() {
-    if (currentQuestionIndex >= frenchWords.length) {
-        document.getElementById('quizSection').innerHTML = `<p>Quiz terminé ! Félicitations.</p>`;
-        return;
-    }
-
-    const question = `Traduisez : ${frenchWords[currentQuestionIndex]}`;
-    document.getElementById('question').innerText = question;
-}
-
-// Valider une réponse
-document.getElementById('submitAnswerButton').addEventListener('click', () => {
-    const userAnswer = document.getElementById('answerInput').value.trim();
-    const correctAnswer = germanWords[currentQuestionIndex];
-
-    const feedback = document.getElementById('feedback');
-
-    if (!userAnswer) {
-        feedback.innerText = 'Veuillez entrer une réponse !';
-        return;
-    }
-
-    if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-        feedback.innerText = 'Correct ! 😊';
-    } else {
-        feedback.innerText = `Incorrect. La bonne réponse était : ${correctAnswer}`;
-    }
-
-    currentQuestionIndex++;
-    document.getElementById('answerInput').value = ''; // Réinitialiser le champ de réponse
-    showQuestion();
 });
