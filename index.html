@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyse de texte</title>
+    <title>Quiz de vocabulaire</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
@@ -25,6 +25,15 @@
     </div>
 
     <div id="separationResult"></div>
+
+    <button id="startQuizButton" style="display: none;">Démarrer le Quiz</button>
+
+    <div id="quizSection" style="display: none;">
+        <h3 id="question"></h3>
+        <input type="text" id="answerInput" placeholder="Votre réponse">
+        <button id="submitAnswerButton">Valider</button>
+        <p id="feedback"></p>
+    </div>
 
     <script src="app.js"></script>
 </body>
