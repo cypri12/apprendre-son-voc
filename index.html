@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyse de texte</title>
+    <title>Analyse de texte - Allemand et Français</title>
+    <!-- Inclusion de Tesseract.js depuis un CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
     <h1>Analyse de texte - Allemand et Français</h1>
     <form id="uploadForm">
-        <label for="textInput">Collez ou entrez le texte :</label><br>
-        <textarea id="textInput" rows="10" cols="50" placeholder="Entrez le texte ici..."></textarea><br><br>
+        <label for="imageInput">Chargez une image :</label>
+        <input type="file" id="imageInput" accept="image/*" required><br><br>
 
         <p>Quel côté contient le texte en allemand ?</p>
         <label><input type="radio" name="langSide" value="left" required> Gauche</label>
@@ -20,6 +22,7 @@
 
     <div id="output"></div>
 
+    <!-- Inclusion du fichier JavaScript -->
     <script src="app.js"></script>
 </body>
 </html>
