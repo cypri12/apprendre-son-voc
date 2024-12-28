@@ -1,19 +1,37 @@
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const textInput = document.getElementById('textInput');
+    const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output');
     const langSide = document.querySelector('input[name="langSide"]:checked').value;
 
-    if (!textInput.value.trim()) {
-        outputDiv.innerHTML = `<p>Veuillez entrer du texte.</p>`;
+    if (fileInput.files.length === 0) {
+        outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
         return;
     }
 
-    const rawText = textInput.value.trim();
+    const file = fileInput.files[0];
+    const image = URL.createObjectURL(file);
+
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
 
+    // Vérifier que Tesseract.js est bien chargé
+    if (typeof Tesseract === 'undefined') {
+        outputDiv.innerHTML = `<p>Erreur : Tesseract.js n'est pas chargé. Vérifiez le lien CDN.</p>`;
+        console.error("Tesseract.js n'est pas défini.");
+        return;
+    }
+
     try {
+        // Analyser l'image avec Tesseract.js
+        const result = await Tesseract.recognize(image, 'deu+fra', {
+            logger: (info) => console.log(info),
+        });
+
+        // Texte brut extrait
+        const rawText = result.data.text;
+        console.log('Texte brut extrait :', rawText);
+
         // Diviser le texte en lignes
         const lines = rawText.split('\n').filter((line) => line.trim() !== '');
 
