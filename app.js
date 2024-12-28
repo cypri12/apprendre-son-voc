@@ -1,4 +1,4 @@
-let extractedText = ''; // Stocker le texte brut extrait
+let extractedData = null; // Stocker les données extraites par Tesseract.js
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -17,8 +17,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const image = URL.createObjectURL(file);
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
-    separationResult.innerHTML = ''; // Réinitialiser le résultat précédent
-    languageChoice.style.display = 'none'; // Cacher la section de choix des côtés
+    separationResult.innerHTML = ''; // Réinitialiser les résultats précédents
+    languageChoice.style.display = 'none'; // Masquer la section de choix des côtés
 
     try {
         // Analyser l'image avec Tesseract.js
@@ -26,12 +26,12 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
             logger: (info) => console.log(info),
         });
 
-        // Stocker le texte brut extrait
-        extractedText = result.data.text;
-        console.log('Texte brut extrait :', extractedText);
+        // Stocker les données extraites
+        extractedData = result.data;
+        console.log('Données extraites :', extractedData);
 
-        // Afficher le texte brut
-        outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedText}</pre>`;
+        // Afficher le texte brut extrait
+        outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedData.text}</pre>`;
 
         // Afficher la section pour demander les côtés
         languageChoice.style.display = 'block';
@@ -41,7 +41,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     }
 });
 
-// Séparer le texte selon le choix de l'utilisateur
+// Séparer le texte selon les colonnes
 document.getElementById('confirmSideButton').addEventListener('click', () => {
     const separationResult = document.getElementById('separationResult');
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
@@ -53,18 +53,29 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
 
     const langSide = langSideInput.value;
 
-    if (!extractedText) {
-        separationResult.innerHTML = `<p>Aucun texte à séparer. Analysez une image d'abord.</p>`;
+    if (!extractedData) {
+        separationResult.innerHTML = `<p>Aucune donnée à séparer. Analysez une image d'abord.</p>`;
         return;
     }
 
-    // Diviser le texte en lignes
-    const lines = extractedText.split('\n').filter((line) => line.trim() !== '');
+    // Obtenir les mots extraits avec leurs positions
+    const words = extractedData.words;
 
-    // Diviser les lignes en deux colonnes
-    const midIndex = Math.floor(lines.length / 2);
-    const leftColumn = lines.slice(0, midIndex);
-    const rightColumn = lines.slice(midIndex);
+    // Trouver le centre horizontal moyen de l'image
+    const centerX = (Math.max(...words.map(w => w.bbox.x1)) + Math.min(...words.map(w => w.bbox.x0))) / 2;
+
+    // Classer les mots en colonnes gauche et droite
+    const leftColumn = [];
+    const rightColumn = [];
+
+    words.forEach(word => {
+        const wordCenterX = (word.bbox.x0 + word.bbox.x1) / 2;
+        if (wordCenterX < centerX) {
+            leftColumn.push(word.text);
+        } else {
+            rightColumn.push(word.text);
+        }
+    });
 
     // Classer en fonction du choix de l'utilisateur
     let frenchText, germanText;
@@ -78,12 +89,12 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
 
     // Afficher les résultats séparés
     separationResult.innerHTML = `<h3>Texte en Français :</h3>`;
-    frenchText.forEach((line) => {
+    frenchText.forEach(line => {
         separationResult.innerHTML += `<p>${line}</p>`;
     });
 
     separationResult.innerHTML += `<h3>Texte en Allemand :</h3>`;
-    germanText.forEach((line) => {
+    germanText.forEach(line => {
         separationResult.innerHTML += `<p>${line}</p>`;
     });
 });
