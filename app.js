@@ -1,7 +1,6 @@
 let extractedLines = []; // Stocker les lignes extraites
 let frenchWords = []; // Stocker les mots en français
 let germanWords = []; // Stocker les mots en allemand
-let currentCardIndex = 0; // Index de la carte actuelle
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -19,7 +18,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const image = URL.createObjectURL(file);
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
-    languageChoice.style.display = 'none'; // Masquer la section de choix des côtés
+    languageChoice.style.display = 'none';
 
     try {
         // Analyse de l'image avec Tesseract.js
@@ -90,37 +89,45 @@ function openFlashcardWindow() {
         return;
     }
 
+    // Injecter le contenu dans la nouvelle fenêtre
     newWindow.document.write(`
-        <html>
-            <head>
-                <title>Cartes de vocabulaire</title>
-                <style>
-                    ${document.querySelector('style').innerText}
-                </style>
-            </head>
-            <body>
-                <div class="card">
-                    <div class="content" id="card-content">
-                        <div class="front">${frenchWords[0]}</div>
-                        <div class="back">${germanWords[0]}</div>
-                    </div>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Cartes de vocabulaire</title>
+            <style>
+                ${document.querySelector('style')?.innerText || ''}
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <div class="content" id="card-content">
+                    <div class="front">${frenchWords[0]}</div>
+                    <div class="back">${germanWords[0]}</div>
                 </div>
-                <button id="next-button">Suivant</button>
-                <script>
-                    let currentIndex = 0;
+            </div>
+            <button id="next-button">Suivant</button>
+            <script>
+                let currentIndex = 0;
+                const frenchWords = ${JSON.stringify(frenchWords)};
+                const germanWords = ${JSON.stringify(germanWords)};
 
-                    document.getElementById('next-button').addEventListener('click', () => {
-                        currentIndex++;
-                        if (currentIndex < ${frenchWords.length}) {
-                            document.querySelector('.front').innerText = '${frenchWords[0]}';
-                            document.querySelector('.back').innerText = '${germanWords[0]}';
-                        } else {
-                            alert('Vous avez terminé toutes les cartes !');
-                            window.close();
-                        }
-                    });
-                </script>
-            </body>
+                document.getElementById('next-button').addEventListener('click', () => {
+                    currentIndex++;
+                    if (currentIndex < frenchWords.length) {
+                        document.querySelector('.front').innerText = frenchWords[currentIndex];
+                        document.querySelector('.back').innerText = germanWords[currentIndex];
+                    } else {
+                        alert('Vous avez terminé toutes les cartes !');
+                        window.close();
+                    }
+                });
+            </script>
+        </body>
         </html>
     `);
+
+    newWindow.document.close();
 }
