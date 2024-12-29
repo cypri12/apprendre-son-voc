@@ -1,6 +1,7 @@
 let extractedLines = []; // Stocker les lignes extraites
 let frenchWords = []; // Stocker les mots en français
 let germanWords = []; // Stocker les mots en allemand
+let currentCardIndex = 0; // Index de la carte actuelle
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -8,7 +9,6 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output');
     const languageChoice = document.getElementById('languageChoice');
-    const cardContainer = document.getElementById("card-container");
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
@@ -20,7 +20,6 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
     languageChoice.style.display = 'none'; // Masquer la section de choix des côtés
-    cardContainer.innerHTML = ''; // Réinitialiser les cartes
 
     try {
         // Analyse de l'image avec Tesseract.js
@@ -48,9 +47,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     }
 });
 
-// Séparer les lignes selon les tirets
 document.getElementById('confirmSideButton').addEventListener('click', () => {
-    const cardContainer = document.getElementById("card-container");
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
     if (!langSideInput) {
@@ -63,7 +60,6 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
     frenchWords = [];
     germanWords = [];
 
-    // Diviser chaque ligne en fonction du tiret
     extractedLines.forEach(line => {
         const parts = line.split('-'); // Supposons que les colonnes sont séparées par un tiret
         if (parts.length === 2) {
@@ -82,27 +78,49 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
         return;
     }
 
-    // Générer les cartes dynamiquement
-    cardContainer.innerHTML = ''; // Réinitialiser les cartes
-    frenchWords.forEach((word, index) => {
-        const card = document.createElement("div");
-        card.classList.add("card");
-
-        const content = document.createElement("div");
-        content.classList.add("content");
-
-        const front = document.createElement("div");
-        front.classList.add("front");
-        front.textContent = word; // Mot en français
-
-        const back = document.createElement("div");
-        back.classList.add("back");
-        back.textContent = germanWords[index]; // Traduction en allemand
-
-        content.appendChild(front);
-        content.appendChild(back);
-        card.appendChild(content);
-
-        cardContainer.appendChild(card);
-    });
+    // Ouvrir une nouvelle fenêtre pour afficher les cartes
+    openFlashcardWindow();
 });
+
+function openFlashcardWindow() {
+    const newWindow = window.open("", "Flashcards", "width=400,height=600");
+
+    if (!newWindow) {
+        alert("La fenêtre contextuelle est bloquée. Veuillez autoriser les fenêtres contextuelles.");
+        return;
+    }
+
+    newWindow.document.write(`
+        <html>
+            <head>
+                <title>Cartes de vocabulaire</title>
+                <style>
+                    ${document.querySelector('style').innerText}
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <div class="content" id="card-content">
+                        <div class="front">${frenchWords[0]}</div>
+                        <div class="back">${germanWords[0]}</div>
+                    </div>
+                </div>
+                <button id="next-button">Suivant</button>
+                <script>
+                    let currentIndex = 0;
+
+                    document.getElementById('next-button').addEventListener('click', () => {
+                        currentIndex++;
+                        if (currentIndex < ${frenchWords.length}) {
+                            document.querySelector('.front').innerText = '${frenchWords[0]}';
+                            document.querySelector('.back').innerText = '${germanWords[0]}';
+                        } else {
+                            alert('Vous avez terminé toutes les cartes !');
+                            window.close();
+                        }
+                    });
+                </script>
+            </body>
+        </html>
+    `);
+}
