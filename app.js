@@ -8,7 +8,6 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output');
     const languageChoice = document.getElementById('languageChoice');
-    const separationResult = document.getElementById('separationResult');
     const cardContainer = document.getElementById("card-container");
 
     if (fileInput.files.length === 0) {
@@ -20,7 +19,6 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const image = URL.createObjectURL(file);
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
-    separationResult.innerHTML = ''; // Réinitialiser les résultats précédents
     languageChoice.style.display = 'none'; // Masquer la section de choix des côtés
     cardContainer.innerHTML = ''; // Réinitialiser les cartes
 
@@ -52,21 +50,15 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
 
 // Séparer les lignes selon les tirets
 document.getElementById('confirmSideButton').addEventListener('click', () => {
-    const separationResult = document.getElementById('separationResult');
     const cardContainer = document.getElementById("card-container");
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
     if (!langSideInput) {
-        separationResult.innerHTML = `<p>Veuillez sélectionner de quel côté se trouve le texte en français.</p>`;
+        alert("Veuillez sélectionner de quel côté se trouve le texte en français.");
         return;
     }
 
     const langSide = langSideInput.value;
-
-    if (extractedLines.length === 0) {
-        separationResult.innerHTML = `<p>Aucune donnée à séparer. Analysez une image d'abord.</p>`;
-        return;
-    }
 
     frenchWords = [];
     germanWords = [];
@@ -85,13 +77,13 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
         }
     });
 
-    // Vérification des résultats
     if (frenchWords.length === 0 || germanWords.length === 0) {
-        separationResult.innerHTML = `<p>Aucune ligne valide détectée. Vérifiez le format du texte extrait.</p>`;
+        alert("Aucune ligne valide détectée. Vérifiez le format du texte extrait.");
         return;
     }
 
     // Générer les cartes dynamiquement
+    cardContainer.innerHTML = ''; // Réinitialiser les cartes
     frenchWords.forEach((word, index) => {
         const card = document.createElement("div");
         card.classList.add("card");
