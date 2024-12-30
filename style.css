@@ -13,7 +13,7 @@ body {
 header {
     text-align: center;
     padding: 20px 0;
-    background: #0077b6;
+    background: #4CAF50;
     color: white;
 }
 
@@ -45,14 +45,17 @@ section {
     text-align: center;
 }
 
-input[type="file"] {
+input[type="file"], input[type="text"] {
     margin: 10px 0;
     padding: 8px;
     font-size: 1rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 button {
-    background: #0077b6;
+    background: #4CAF50;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -63,17 +66,39 @@ button {
 }
 
 button:hover {
-    background: #005f99;
+    background: #388E3C;
+}
+
+#card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card {
+    background: #4CAF50;
+    color: white;
+    font-size: 1.5rem;
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card.correct {
+    background: #2E7D32;
 }
 
 footer {
     text-align: center;
     padding: 10px;
-    background: #005f99;
+    background: #2E7D32;
     color: white;
     font-size: 0.9rem;
-}
-
-.hidden {
-    display: none;
 }
