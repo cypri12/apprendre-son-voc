@@ -1,6 +1,7 @@
-let extractedLines = []; // Stocker les lignes extraites
-let frenchWords = []; // Stocker les mots en français
-let germanWords = []; // Stocker les mots en allemand
+let extractedLines = [];
+let frenchWords = [];
+let germanWords = [];
+let currentTries = []; // Nombre d'essais pour chaque carte
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -21,12 +22,10 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     languageChoice.style.display = 'none';
 
     try {
-        // Analyse de l'image avec Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
             logger: (info) => console.log(info),
         });
 
-        // Stocker les lignes extraites
         extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
         console.log('Lignes extraites :', extractedLines);
 
@@ -35,10 +34,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
             return;
         }
 
-        // Afficher le texte brut
         outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedLines.join('\n')}</pre>`;
-
-        // Afficher la section pour demander les côtés
         languageChoice.style.display = 'block';
     } catch (error) {
         console.error('Erreur lors de l\'analyse :', error);
@@ -58,9 +54,10 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
 
     frenchWords = [];
     germanWords = [];
+    currentTries = [];
 
     extractedLines.forEach(line => {
-        const parts = line.split('-'); // Supposons que les colonnes sont séparées par un tiret
+        const parts = line.split('-');
         if (parts.length === 2) {
             if (langSide === 'left') {
                 frenchWords.push(parts[0].trim());
@@ -69,6 +66,7 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
                 frenchWords.push(parts[1].trim());
                 germanWords.push(parts[0].trim());
             }
+            currentTries.push(0); // Initialise les essais
         }
     });
 
@@ -77,57 +75,64 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
         return;
     }
 
-    // Ouvrir une nouvelle fenêtre pour afficher les cartes
-    openFlashcardWindow();
+    generateInteractiveCards();
 });
 
-function openFlashcardWindow() {
-    const newWindow = window.open("", "Flashcards", "width=400,height=600");
+function generateInteractiveCards() {
+    const cardContainer = document.getElementById("card-container");
+    cardContainer.innerHTML = "";
 
-    if (!newWindow) {
-        alert("La fenêtre contextuelle est bloquée. Veuillez autoriser les fenêtres contextuelles.");
+    frenchWords.forEach((word, index) => {
+        const card = document.createElement("div");
+        card.classList.add("flip-card");
+
+        const cardInner = document.createElement("div");
+        cardInner.classList.add("flip-card-inner");
+        cardInner.setAttribute("data-index", index);
+
+        const front = document.createElement("div");
+        front.classList.add("flip-card-front");
+        front.innerHTML = `<p>${word}</p>`;
+
+        const back = document.createElement("div");
+        back.classList.add("flip-card-back");
+        back.innerHTML = `<p>${germanWords[index]}</p>`;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Entrez la traduction";
+
+        const button = document.createElement("button");
+        button.textContent = "Valider";
+        button.addEventListener("click", () => validateAnswer(index, input, cardInner));
+
+        front.appendChild(input);
+        front.appendChild(button);
+
+        cardInner.appendChild(front);
+        cardInner.appendChild(back);
+        card.appendChild(cardInner);
+
+        cardContainer.appendChild(card);
+    });
+}
+
+function validateAnswer(index, input, cardInner) {
+    const userAnswer = input.value.trim();
+    if (!userAnswer) {
+        alert("Veuillez entrer une réponse.");
         return;
     }
 
-    // Injecter le contenu dans la nouvelle fenêtre
-    newWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Cartes de vocabulaire</title>
-            <style>
-                ${document.querySelector('style')?.innerText || ''}
-            </style>
-        </head>
-        <body>
-            <div class="card">
-                <div class="content" id="card-content">
-                    <div class="front">${frenchWords[0]}</div>
-                    <div class="back">${germanWords[0]}</div>
-                </div>
-            </div>
-            <button id="next-button">Suivant</button>
-            <script>
-                let currentIndex = 0;
-                const frenchWords = ${JSON.stringify(frenchWords)};
-                const germanWords = ${JSON.stringify(germanWords)};
-
-                document.getElementById('next-button').addEventListener('click', () => {
-                    currentIndex++;
-                    if (currentIndex < frenchWords.length) {
-                        document.querySelector('.front').innerText = frenchWords[currentIndex];
-                        document.querySelector('.back').innerText = germanWords[currentIndex];
-                    } else {
-                        alert('Vous avez terminé toutes les cartes !');
-                        window.close();
-                    }
-                });
-            </script>
-        </body>
-        </html>
-    `);
-
-    newWindow.document.close();
+    if (userAnswer.toLowerCase() === germanWords[index].toLowerCase()) {
+        cardInner.style.transform = "rotateY(180deg)";
+    } else {
+        currentTries[index]++;
+        if (currentTries[index] >= 3) {
+            alert(`La bonne réponse était : ${germanWords[index]}`);
+            cardInner.style.transform = "rotateY(180deg)";
+        } else {
+            alert(`Incorrect. Essais restants : ${3 - currentTries[index]}`);
+        }
+    }
 }
