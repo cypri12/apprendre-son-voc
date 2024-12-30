@@ -1,14 +1,14 @@
 let extractedLines = [];
 let frenchWords = [];
 let germanWords = [];
-let currentTries = []; // Nombre d'essais pour chaque carte
+let currentWordIndex = 0;
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const fileInput = document.getElementById('imageInput');
     const outputDiv = document.getElementById('output');
-    const languageChoice = document.getElementById('languageChoice');
+    const instructions = document.getElementById('instructions');
 
     if (fileInput.files.length === 0) {
         outputDiv.innerHTML = `<p>Veuillez choisir une image.</p>`;
@@ -19,7 +19,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const image = URL.createObjectURL(file);
 
     outputDiv.innerHTML = `<p>Analyse en cours...</p>`;
-    languageChoice.style.display = 'none';
+    instructions.classList.add('hidden');
 
     try {
         const result = await Tesseract.recognize(image, 'deu+fra', {
@@ -35,7 +35,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         }
 
         outputDiv.innerHTML = `<h3>Texte brut extrait :</h3><pre>${extractedLines.join('\n')}</pre>`;
-        languageChoice.style.display = 'block';
+        instructions.classList.remove('hidden');
     } catch (error) {
         console.error('Erreur lors de l\'analyse :', error);
         outputDiv.innerHTML = `<p>Erreur lors de l'analyse. Veuillez réessayer.</p>`;
@@ -54,7 +54,6 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
 
     frenchWords = [];
     germanWords = [];
-    currentTries = [];
 
     extractedLines.forEach(line => {
         const parts = line.split('-');
@@ -66,7 +65,6 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
                 frenchWords.push(parts[1].trim());
                 germanWords.push(parts[0].trim());
             }
-            currentTries.push(0); // Initialise les essais
         }
     });
 
@@ -75,64 +73,108 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
         return;
     }
 
-    generateInteractiveCards();
+    openFlashcardWindow();
 });
 
-function generateInteractiveCards() {
-    const cardContainer = document.getElementById("card-container");
-    cardContainer.innerHTML = "";
-
-    frenchWords.forEach((word, index) => {
-        const card = document.createElement("div");
-        card.classList.add("flip-card");
-
-        const cardInner = document.createElement("div");
-        cardInner.classList.add("flip-card-inner");
-        cardInner.setAttribute("data-index", index);
-
-        const front = document.createElement("div");
-        front.classList.add("flip-card-front");
-        front.innerHTML = `<p>${word}</p>`;
-
-        const back = document.createElement("div");
-        back.classList.add("flip-card-back");
-        back.innerHTML = `<p>${germanWords[index]}</p>`;
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "Entrez la traduction";
-
-        const button = document.createElement("button");
-        button.textContent = "Valider";
-        button.addEventListener("click", () => validateAnswer(index, input, cardInner));
-
-        front.appendChild(input);
-        front.appendChild(button);
-
-        cardInner.appendChild(front);
-        cardInner.appendChild(back);
-        card.appendChild(cardInner);
-
-        cardContainer.appendChild(card);
-    });
-}
-
-function validateAnswer(index, input, cardInner) {
-    const userAnswer = input.value.trim();
-    if (!userAnswer) {
-        alert("Veuillez entrer une réponse.");
+function openFlashcardWindow() {
+    if (currentWordIndex >= frenchWords.length) {
+        alert("Vous avez terminé toutes les cartes !");
         return;
     }
 
-    if (userAnswer.toLowerCase() === germanWords[index].toLowerCase()) {
-        cardInner.style.transform = "rotateY(180deg)";
-    } else {
-        currentTries[index]++;
-        if (currentTries[index] >= 3) {
-            alert(`La bonne réponse était : ${germanWords[index]}`);
-            cardInner.style.transform = "rotateY(180deg)";
-        } else {
-            alert(`Incorrect. Essais restants : ${3 - currentTries[index]}`);
-        }
+    const frenchWord = frenchWords[currentWordIndex];
+    const germanWord = germanWords[currentWordIndex];
+    currentWordIndex++;
+
+    const newWindow = window.open("", "Flashcard", "width=400,height=600");
+
+    if (!newWindow) {
+        alert("Veuillez autoriser les fenêtres contextuelles pour afficher les cartes.");
+        return;
     }
+
+    newWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Flashcard</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                    background: #f4f4f4;
+                }
+                .card {
+                    width: 300px;
+                    height: 400px;
+                    perspective: 1000px;
+                }
+                .inner {
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                    transition: transform 0.8s;
+                    transform-style: preserve-3d;
+                }
+                .front, .back {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    backface-visibility: hidden;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 1.5rem;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+                .front {
+                    background: #ff6347;
+                    color: white;
+                }
+                .back {
+                    background: #4caf50;
+                    color: white;
+                    transform: rotateY(180deg);
+                }
+                button {
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    font-size: 1rem;
+                    border: none;
+                    background: #2196f3;
+                    color: white;
+                    cursor: pointer;
+                    border-radius: 5px;
+                }
+                button:hover {
+                    background: #1e88e5;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <div class="inner" id="flashcard">
+                    <div class="front">${frenchWord}</div>
+                    <div class="back">${germanWord}</div>
+                </div>
+            </div>
+            <button id="reveal">Voir la réponse</button>
+            <script>
+                document.getElementById('reveal').addEventListener('click', () => {
+                    document.getElementById('flashcard').style.transform = "rotateY(180deg)";
+                });
+            </script>
+        </body>
+        </html>
+    `);
+
+    newWindow.document.close();
 }
