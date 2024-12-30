@@ -1,7 +1,8 @@
 let extractedLines = [];
 let frenchWords = [];
 let germanWords = [];
-let currentWordIndex = 0;
+let currentIndex = 0;
+let attempts = 0;
 
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -73,82 +74,48 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
         return;
     }
 
-    openFlashcardWindow();
+    startGame();
 });
 
-function openFlashcardWindow() {
-    if (currentWordIndex >= frenchWords.length) {
-        alert("Vous avez terminé toutes les cartes !");
+function startGame() {
+    document.getElementById('instructions').classList.add('hidden');
+    document.getElementById('game-section').classList.remove('hidden');
+    showCard();
+}
+
+function showCard() {
+    if (currentIndex >= frenchWords.length) {
+        alert("Félicitations ! Vous avez terminé toutes les cartes.");
         return;
     }
 
-    const frenchWord = frenchWords[currentWordIndex];
-    const germanWord = germanWords[currentWordIndex];
-    currentWordIndex++;
+    const container = document.getElementById('card-container');
+    container.innerHTML = `
+        <div class="card">${frenchWords[currentIndex]}</div>
+        <input type="text" id="userAnswer" placeholder="Entrez la traduction">
+        <button onclick="validateAnswer()">Valider</button>
+    `;
+}
 
-    const newWindow = window.open("", "Flashcard", "width=400,height=600");
+function validateAnswer() {
+    const userAnswer = document.getElementById('userAnswer').value.trim().toLowerCase();
 
-    if (!newWindow) {
-        alert("Veuillez autoriser les fenêtres contextuelles pour afficher les cartes.");
-        return;
+    if (userAnswer === germanWords[currentIndex].toLowerCase()) {
+        document.querySelector('.card').classList.add('correct');
+        setTimeout(() => {
+            currentIndex++;
+            attempts = 0;
+            showCard();
+        }, 1000);
+    } else {
+        attempts++;
+        if (attempts >= 3) {
+            alert(`La bonne réponse était : ${germanWords[currentIndex]}`);
+            currentIndex++;
+            attempts = 0;
+            showCard();
+        } else {
+            alert(`Incorrect. Essais restants : ${3 - attempts}`);
+        }
     }
-
-    newWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Flashcard</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    margin: 0;
-                    background: #f5f5f5;
-                }
-                .card {
-                    width: 300px;
-                    height: 400px;
-                    background: #0077b6;
-                    color: white;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    font-size: 2rem;
-                    text-align: center;
-                    border-radius: 10px;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                }
-                button {
-                    margin-top: 20px;
-                    padding: 10px 20px;
-                    background: #ff6347;
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                }
-                button:hover {
-                    background: #ff4500;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="card">${frenchWord}</div>
-            <button onclick="revealAnswer()">Voir la réponse</button>
-            <script>
-                function revealAnswer() {
-                    document.querySelector('.card').textContent = '${germanWord}';
-                }
-            </script>
-        </body>
-        </html>
-    `);
-
-    newWindow.document.close();
 }
