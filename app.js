@@ -109,68 +109,42 @@ function openFlashcardWindow() {
                     align-items: center;
                     height: 100vh;
                     margin: 0;
-                    background: #f4f4f4;
+                    background: #f5f5f5;
                 }
                 .card {
                     width: 300px;
                     height: 400px;
-                    perspective: 1000px;
-                }
-                .inner {
-                    width: 100%;
-                    height: 100%;
-                    text-align: center;
-                    transition: transform 0.8s;
-                    transform-style: preserve-3d;
-                }
-                .front, .back {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    backface-visibility: hidden;
+                    background: #0077b6;
+                    color: white;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    font-size: 1.5rem;
+                    font-size: 2rem;
+                    text-align: center;
                     border-radius: 10px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                }
-                .front {
-                    background: #ff6347;
-                    color: white;
-                }
-                .back {
-                    background: #4caf50;
-                    color: white;
-                    transform: rotateY(180deg);
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
                 }
                 button {
                     margin-top: 20px;
                     padding: 10px 20px;
-                    font-size: 1rem;
-                    border: none;
-                    background: #2196f3;
+                    background: #ff6347;
                     color: white;
-                    cursor: pointer;
+                    border: none;
                     border-radius: 5px;
+                    cursor: pointer;
                 }
                 button:hover {
-                    background: #1e88e5;
+                    background: #ff4500;
                 }
             </style>
         </head>
         <body>
-            <div class="card">
-                <div class="inner" id="flashcard">
-                    <div class="front">${frenchWord}</div>
-                    <div class="back">${germanWord}</div>
-                </div>
-            </div>
-            <button id="reveal">Voir la réponse</button>
+            <div class="card">${frenchWord}</div>
+            <button onclick="revealAnswer()">Voir la réponse</button>
             <script>
-                document.getElementById('reveal').addEventListener('click', () => {
-                    document.getElementById('flashcard').style.transform = "rotateY(180deg)";
-                });
+                function revealAnswer() {
+                    document.querySelector('.card').textContent = '${germanWord}';
+                }
             </script>
         </body>
         </html>
