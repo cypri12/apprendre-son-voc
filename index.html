@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de vocabulaire - Cartes interactives</title>
+    <title>Quiz de vocabulaire - Le Meilleur Style</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
-    <h1>Quiz de vocabulaire - Français et Allemand</h1>
+    <header>
+        <h1>Quiz de vocabulaire interactif</h1>
+        <p>Apprenez le vocabulaire allemand en jouant avec des cartes interactives.</p>
+    </header>
 
-    <form id="uploadForm">
-        <label for="imageInput">Chargez une image :</label>
-        <input type="file" id="imageInput" accept="image/*" required><br><br>
-        <button type="submit">Analyser l'image</button>
-    </form>
+    <main>
+        <form id="uploadForm">
+            <label for="imageInput">Chargez une image contenant votre vocabulaire :</label>
+            <input type="file" id="imageInput" accept="image/*" required><br>
+            <button type="submit">Analyser l'image</button>
+        </form>
 
-    <div id="output"></div>
+        <div id="instructions" class="hidden">
+            <h2>Instructions :</h2>
+            <p>Choisissez où se trouve le français (gauche ou droite).</p>
+            <div>
+                <label><input type="radio" name="langSide" value="left" required> Français à gauche</label>
+                <label><input type="radio" name="langSide" value="right"> Français à droite</label>
+            </div>
+            <button id="confirmSideButton">Confirmer</button>
+        </div>
 
-    <div id="languageChoice" style="display: none;">
-        <p>De quel côté du tiret se trouve le texte en français ?</p>
-        <label><input type="radio" name="langSide" value="left" required> À gauche</label>
-        <label><input type="radio" name="langSide" value="right"> À droite</label><br><br>
-        <button id="confirmSideButton">Confirmer</button>
-    </div>
+        <div id="output"></div>
+    </main>
 
-    <div id="card-container" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
-        <!-- Les cartes seront générées ici -->
-    </div>
+    <footer>
+        <p>&copy; 2024 - Votre site interactif de vocabulaire</p>
+    </footer>
 
     <script src="app.js"></script>
 </body>
