@@ -3,38 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de vocabulaire - Le Meilleur Style</title>
+    <title>Vocabulaire Interactif</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
     <header>
-        <h1>Quiz de vocabulaire interactif</h1>
-        <p>Apprenez le vocabulaire allemand en jouant avec des cartes interactives.</p>
+        <h1>Vocabulaire Interactif</h1>
+        <p>Apprenez en jouant avec vos propres images de vocabulaire&nbsp;!</p>
     </header>
 
     <main>
-        <form id="uploadForm">
-            <label for="imageInput">Chargez une image contenant votre vocabulaire :</label>
-            <input type="file" id="imageInput" accept="image/*" required><br>
-            <button type="submit">Analyser l'image</button>
-        </form>
+        <section id="upload-section">
+            <h2>Étape 1 : Téléchargez une image</h2>
+            <form id="uploadForm">
+                <input type="file" id="imageInput" accept="image/*" required>
+                <button type="submit">Analyser l'image</button>
+            </form>
+            <div id="output" class="hidden"></div>
+        </section>
 
-        <div id="instructions" class="hidden">
-            <h2>Instructions :</h2>
-            <p>Choisissez où se trouve le français (gauche ou droite).</p>
+        <section id="instructions" class="hidden">
+            <h2>Étape 2 : Configurez vos cartes</h2>
+            <p>De quel côté du tiret se trouve le texte en français ?</p>
             <div>
                 <label><input type="radio" name="langSide" value="left" required> Français à gauche</label>
                 <label><input type="radio" name="langSide" value="right"> Français à droite</label>
             </div>
             <button id="confirmSideButton">Confirmer</button>
-        </div>
-
-        <div id="output"></div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 - Votre site interactif de vocabulaire</p>
+        <p>&copy; 2024 - Vocabulaire Interactif | Apprenez en jouant</p>
     </footer>
 
     <script src="app.js"></script>
