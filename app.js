@@ -88,7 +88,7 @@ function showCard() {
     container.innerHTML = `
         <div class="card">${frenchWords[currentIndex]}</div>
         <input type="text" id="userAnswer" placeholder="Entrez la traduction">
-        <button onclick="validateAnswer()">Valider</button>
+        <button onclick="validateAnswer()" class="button">Valider</button>
     `;
 }
 
