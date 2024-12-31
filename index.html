@@ -8,39 +8,46 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Vocabulaire Interactif</h1>
-        <p>Apprenez et testez vos connaissances en vocabulaire !</p>
-    </header>
+    <div class="container">
+        <header>
+            <h1>Vocabulaire Interactif</h1>
+            <p>Transformez vos listes de vocabulaire en un jeu interactif amusant et éducatif.</p>
+        </header>
 
-    <main>
-        <section id="upload-section">
-            <h2>Étape 1 : Téléchargez une image</h2>
-            <form id="uploadForm">
-                <input type="file" id="imageInput" accept="image/*" required>
-                <button type="submit">Analyser l'image</button>
-            </form>
-            <div id="output" class="hidden"></div>
-        </section>
+        <main>
+            <section class="upload-section">
+                <h2>Téléchargez une image</h2>
+                <form id="uploadForm">
+                    <input type="file" id="imageInput" accept="image/*" required>
+                    <button type="submit">Analyser l'image</button>
+                </form>
+            </section>
 
-        <section id="instructions" class="hidden">
-            <h2>Étape 2 : Configurez vos cartes</h2>
-            <p>De quel côté du tiret se trouve le texte en français ?</p>
-            <div>
-                <label><input type="radio" name="langSide" value="left" required> Français à gauche</label>
-                <label><input type="radio" name="langSide" value="right"> Français à droite</label>
-            </div>
-            <button id="confirmSideButton">Confirmer</button>
-        </section>
+            <section id="instructions" class="hidden">
+                <h2>Configuration</h2>
+                <p>De quel côté du tiret se trouve le texte en français ?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="langSide" value="left" required> Français à gauche
+                    </label>
+                    <label>
+                        <input type="radio" name="langSide" value="right"> Français à droite
+                    </label>
+                </div>
+                <button id="confirmSideButton">Confirmer</button>
+            </section>
 
-        <div id="game-section" class="hidden">
-            <h2>Étape 3 : Répondez aux cartes</h2>
-            <div id="card-container"></div>
-        </div>
-    </main>
+            <section id="game-section" class="hidden">
+                <h2>Répondez aux questions</h2>
+                <div id="card-container">
+                    <!-- Les cartes interactives s'afficheront ici -->
+                </div>
+            </section>
+        </main>
+    </div>
 
     <footer>
-        <p>&copy; 2024 - Vocabulaire Interactif | Apprenez en jouant</p>
+        <p>&copy; 2024 - Vocabulaire Interactif | Parfait pour apprendre et s'amuser</p>
     </footer>
 
     <script src="app.js"></script>
