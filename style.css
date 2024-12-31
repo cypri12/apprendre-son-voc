@@ -1,69 +1,88 @@
-/* Styles généraux */
+/* Global Styles */
 body {
     margin: 0;
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #b3e5fc, #e1f5fe);
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    color: #333;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    color: #333;
-}
-
-.container {
-    width: 90%;
-    max-width: 800px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
 }
 
 header {
     text-align: center;
-    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    width: 100%;
+    padding: 20px;
+    border-bottom: 2px solid #0288d1;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-    font-size: 2rem;
-    color: #0288d1;
+    font-size: 2.5rem;
+    color: #005f99;
+    margin: 0;
 }
 
 header p {
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: #555;
+    margin-top: 10px;
 }
 
-main section {
-    margin: 20px 0;
+main {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
-main section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: red;
+section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
-input[type="file"] {
+section h2 {
+    font-size: 1.8rem;
+    color: #005f99;
+    margin-bottom: 10px;
+}
+
+input[type="file"], input[type="text"] {
     margin-top: 10px;
     font-size: 1rem;
+    padding: 10px;
+    width: 80%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-button {
-    background: #0288d1;
+.button {
+    display: inline-block;
+    margin-top: 20px;
+    background: #66a6ff;
     color: white;
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s ease;
-    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
-    background: #01579b;
+.button:hover {
+    background: #005f99;
+    transform: translateY(-2px);
 }
 
 .hidden {
@@ -71,13 +90,20 @@ button:hover {
 }
 
 .radio-group label {
-    display: block;
-    margin: 10px 0;
+    display: inline-block;
+    margin: 10px;
+    font-size: 1.1rem;
+    color: #333;
+    cursor: pointer;
 }
 
 footer {
     text-align: center;
-    font-size: 0.9rem;
-    color: #555;
     margin-top: 20px;
+    color: white;
+    font-size: 0.9rem;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.2);
 }
