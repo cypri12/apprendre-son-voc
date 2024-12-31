@@ -42,7 +42,7 @@ main section {
 main section h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
-    color: #0288d1;
+    color: red;
 }
 
 input[type="file"] {
