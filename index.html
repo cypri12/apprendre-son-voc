@@ -23,14 +23,6 @@
     </div>
 
     <main>
-        <!-- Content Section -->
-        <div class="main-content">
-            <header>
-                <h1>Vocabulaire Interactif</h1>
-                <p>Apprenez facilement du vocabulaire français et allemand en jouant !</p>
-            </header>
-        </div>
-
         <!-- Upload Section -->
         <section class="upload-section" id="upload-section">
             <h2>Étape 1 : Téléchargez une image</h2>
@@ -44,6 +36,29 @@
                 <input type="file" id="imageInput" accept="image/*" required>
                 <button type="submit" class="button">Analyser l'image</button>
             </form>
+        </section>
+
+        <!-- Instructions Section -->
+        <section id="instructions" class="hidden">
+            <h2>Étape 2 : Configurez vos cartes</h2>
+            <p>De quel côté du tiret se trouve le texte en français ?</p>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="langSide" value="left" required> Français à gauche
+                </label>
+                <label>
+                    <input type="radio" name="langSide" value="right"> Français à droite
+                </label>
+            </div>
+            <button id="confirmSideButton" class="button">Confirmer</button>
+        </section>
+
+        <!-- Game Section -->
+        <section id="game-section" class="hidden">
+            <h2>Étape 3 : Répondez aux cartes</h2>
+            <div id="card-container">
+                <!-- Les cartes interactives s'afficheront ici -->
+            </div>
         </section>
     </main>
 
