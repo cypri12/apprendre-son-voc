@@ -8,6 +8,20 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 </head>
 <body>
+    <!-- Modal for Terms and Conditions -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2>Conditions d'utilisation</h2>
+            <p>Bienvenue sur notre site interactif de vocabulaire.</p>
+            <p>Ce site a été créé par <strong>Cyprien Guillaume</strong>.</p>
+            <p>Pour toute question, contactez-moi à : 
+                <a href="mailto:cyprien.guillaume@outlook.com">cyprien.guillaume@outlook.com</a>
+            </p>
+            <p>En continuant à utiliser ce site, vous acceptez nos conditions d'utilisation.</p>
+            <button id="acceptButton" class="button">Accepter</button>
+        </div>
+    </div>
+
     <header>
         <h1>Vocabulaire Interactif</h1>
         <p>Apprenez facilement du vocabulaire français et allemand en jouant !</p>
@@ -39,7 +53,7 @@
         <section id="game-section" class="hidden">
             <h2>Étape 3 : Répondez aux cartes</h2>
             <div id="card-container">
-                <!-- Les cartes s'afficheront ici -->
+                <!-- Les cartes interactives s'afficheront ici -->
             </div>
         </section>
     </main>
