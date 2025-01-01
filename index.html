@@ -17,7 +17,7 @@
             <p>Pour toute question, contactez-moi à : 
                 <a href="mailto:cyprien.guillaume@outlook.com">cyprien.guillaume@outlook.com</a>
             </p>
-            <p>En continuant à utiliser ce site, vous acceptez nos conditions d'utilisation.</p>
+            <p>Ce site est conçu pour vous aider à réviser votre vocabulaire d'allemand.</p>
             <button id="acceptButton" class="button">Accepter</button>
         </div>
     </div>
@@ -30,6 +30,12 @@
     <main>
         <section class="upload-section">
             <h2>Étape 1 : Téléchargez une image</h2>
+            <p><strong>Important :</strong> L'image doit être correctement formatée :</p>
+            <ul>
+                <li>Chaque ligne doit contenir un mot ou une phrase en français et sa traduction en allemand, séparés par un tiret (<code>-</code>).</li>
+                <li>Les colonnes doivent être alignées, sans titres ou en-têtes.</li>
+                <li>Exemple : <code>Bonjour - Guten Tag</code></li>
+            </ul>
             <form id="uploadForm">
                 <input type="file" id="imageInput" accept="image/*" required>
                 <button type="submit" class="button">Analyser l'image</button>
