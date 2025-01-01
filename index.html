@@ -22,13 +22,31 @@
         </div>
     </div>
 
+    <!-- Header with navigation -->
     <header>
-        <h1>Vocabulaire Interactif</h1>
-        <p>Apprenez facilement du vocabulaire français et allemand en jouant !</p>
+        <nav class="navbar">
+            <div class="logo">Vocabulaire Interactif</div>
+            <ul class="nav-links">
+                <li><a href="#upload-section">Télécharger</a></li>
+                <li><a href="#instructions">Configuration</a></li>
+                <li><a href="#game-section">Jouer</a></li>
+                <li><a href="#about">À propos</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main>
-        <section class="upload-section">
+        <!-- Introduction Section -->
+        <section class="intro">
+            <h1>Bienvenue sur Vocabulaire Interactif</h1>
+            <p>Transformez vos listes de vocabulaire en un jeu interactif amusant !</p>
+            <button class="button" onclick="document.querySelector('#upload-section').scrollIntoView({behavior: 'smooth'})">
+                Commencer
+            </button>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section" id="upload-section">
             <h2>Étape 1 : Téléchargez une image</h2>
             <p><strong>Important :</strong> L'image doit être correctement formatée :</p>
             <ul>
@@ -42,6 +60,7 @@
             </form>
         </section>
 
+        <!-- Instructions Section -->
         <section id="instructions" class="hidden">
             <h2>Étape 2 : Configurez vos cartes</h2>
             <p>De quel côté du tiret se trouve le texte en français ?</p>
@@ -56,6 +75,7 @@
             <button id="confirmSideButton" class="button">Confirmer</button>
         </section>
 
+        <!-- Game Section -->
         <section id="game-section" class="hidden">
             <h2>Étape 3 : Répondez aux cartes</h2>
             <div id="card-container">
@@ -64,8 +84,17 @@
         </section>
     </main>
 
+    <!-- About Section -->
+    <section id="about">
+        <h2>À propos</h2>
+        <p>Ce site a été développé pour aider les étudiants à améliorer leur vocabulaire en allemand.</p>
+        <p>Développé par : <strong>Cyprien Guillaume</strong></p>
+        <p>Contact : <a href="mailto:cyprien.guillaume@outlook.com">cyprien.guillaume@outlook.com</a></p>
+    </section>
+
     <footer>
-        <p>&copy; 2024 - Vocabulaire Interactif | Développé pour apprendre en s'amusant.</p>
+        <p>&copy; 2024 - Vocabulaire Interactif. Tous droits réservés.</p>
+        <p><a href="#modal">Conditions d'utilisation</a></p>
     </footer>
 
     <script src="app.js"></script>
