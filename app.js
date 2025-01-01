@@ -105,3 +105,14 @@ function validateAnswer() {
         showCard();
     }
 }
+// Afficher la boîte modale au chargement de la page
+window.addEventListener('load', () => {
+    const modal = document.getElementById('modal');
+    const acceptButton = document.getElementById('acceptButton');
+
+    modal.style.display = 'flex';
+
+    acceptButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+});
