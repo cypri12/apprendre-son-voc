@@ -127,3 +127,25 @@ input[type="file"], input[type="text"] {
 .modal-content a:hover {
     text-decoration: underline;
 }
+ul {
+    text-align: left;
+    margin: 0 auto;
+    padding: 10px 20px;
+    max-width: 600px;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+ul li {
+    margin: 10px 0;
+}
+
+ul code {
+    background: #f4f4f4;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    color: #005f99;
+}
