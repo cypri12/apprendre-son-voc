@@ -116,3 +116,33 @@ window.addEventListener('load', () => {
         modal.style.display = 'none';
     });
 });
+// EmailJS configuration
+emailjs.init('YOUR_PUBLIC_KEY'); // Remplacez par votre clé publique EmailJS
+
+// Formulaire de saisie de nom
+document.getElementById('nameForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const userName = document.getElementById('userName').value.trim();
+
+    if (!userName) {
+        alert("Veuillez entrer votre nom.");
+        return;
+    }
+
+    // Envoi de l'e-mail via EmailJS
+    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+        user_name: userName,
+        to_email: 'cyprien.guillaume@outlook.com',
+    })
+    .then(function (response) {
+        console.log('E-mail envoyé avec succès', response.status, response.text);
+        alert("Merci, votre nom a été envoyé !");
+    }, function (error) {
+        console.error('Erreur lors de l\'envoi de l\'e-mail', error);
+        alert("Une erreur s'est produite lors de l'envoi.");
+    });
+
+    // Réinitialiser le champ
+    document.getElementById('userName').value = '';
+});
