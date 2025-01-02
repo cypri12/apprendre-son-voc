@@ -6,10 +6,12 @@
     <title>Vocabulaire Interactif</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
     <!-- Navbar -->
     <header class="navbar">
+        <div class="logo">Vocabulaire Interactif</div>
         <nav>
             <ul class="nav-links">
                 <li><a href="#home">Accueil</a></li>
@@ -28,6 +30,16 @@
             <p>Transformez vos listes de vocabulaire en un jeu interactif et éducatif.</p>
             <a href="#upload-section" class="hero-button">Commencer</a>
         </div>
+    </section>
+
+    <!-- User Name Form -->
+    <section id="user-info">
+        <h2>Bienvenue !</h2>
+        <p>Veuillez entrer votre nom avant de commencer :</p>
+        <form id="nameForm">
+            <input type="text" id="userName" placeholder="Entrez votre nom" required>
+            <button type="submit" class="button">Envoyer</button>
+        </form>
     </section>
 
     <!-- Upload Section -->
