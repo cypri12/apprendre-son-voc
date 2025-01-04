@@ -6,7 +6,6 @@
     <title>Vocabulaire Interactif</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
     <!-- Navbar -->
@@ -16,7 +15,6 @@
             <ul class="nav-links">
                 <li><a href="#home">Accueil</a></li>
                 <li><a href="#upload-section">Télécharger</a></li>
-                <li><a href="#instructions">Configuration</a></li>
                 <li><a href="#game-section">Jouer</a></li>
                 <li><a href="#about">À propos</a></li>
             </ul>
@@ -32,8 +30,6 @@
         </div>
     </section>
 
-
-
     <!-- Upload Section -->
     <section class="upload-section" id="upload-section">
         <h2>Étape 1 : Téléchargez une image</h2>
@@ -41,32 +37,20 @@
         <ul>
             <li>Chaque ligne doit contenir un mot ou une phrase en français et sa traduction en allemand, séparés par un espace.</li>
             <li>Les colonnes doivent être alignées, sans titres ou en-têtes.</li>
-            <li>Exemple : <code>Bonjour Guten Tag</code></li>
         </ul>
         <form id="uploadForm">
             <input type="file" id="imageInput" accept="image/*" required>
             <button type="submit" class="button">Analyser l'image</button>
         </form>
-    </section>
-
-    <!-- Instructions Section -->
-    <section id="instructions" class="hidden">
-        <h2>Étape 2 : Configurez vos cartes</h2>
-        <p>De quel côté du tiret se trouve le texte en français ?</p>
-        <div class="radio-group">
-            <label>
-                <input type="radio" name="langSide" value="left" required> Français à gauche
-            </label>
-            <label>
-                <input type="radio" name="langSide" value="right"> Français à droite
-            </label>
+        <div id="fileOutput" class="hidden">
+            <p>Analyse terminée ! Vous pouvez télécharger le fichier de résultat ci-dessous :</p>
+            <a id="downloadLink" href="#" download="vocabulaire.txt" class="button">Télécharger le fichier</a>
         </div>
-        <button id="confirmSideButton" class="button">Confirmer</button>
     </section>
 
     <!-- Game Section -->
     <section id="game-section" class="hidden">
-        <h2>Étape 3 : Répondez aux cartes</h2>
+        <h2>Étape 2 : Répondez aux cartes</h2>
         <div id="card-container">
             <!-- Les cartes interactives s'afficheront ici -->
         </div>
@@ -79,11 +63,6 @@
         <p>Développé par : <strong>Cyprien Guillaume</strong></p>
         <p>Contact : <a href="mailto:cyprien.guillaume@outlook.com">cyprien.guillaume@outlook.com</a></p>
     </section>
-
-    <!-- Help Button -->
-    <button class="help-button" onclick="alert('Si vous avez des questions, contactez-moi à : cyprien.guillaume@outlook.com')">
-        Aide
-    </button>
 
     <footer>
         <p>&copy; 2024 - Vocabulaire Interactif. Tous droits réservés.</p>
