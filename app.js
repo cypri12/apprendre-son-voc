@@ -1,8 +1,10 @@
+// Variables globales
 let extractedLines = [];
 let frenchWords = [];
 let germanWords = [];
 let currentIndex = 0;
 
+// Analyse de l'image au téléchargement
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -17,9 +19,10 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const file = fileInput.files[0];
     const image = URL.createObjectURL(file);
 
-    document.querySelector('.upload-section').innerHTML = `<p>Analyse en cours...</p>`;
+    document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
 
     try {
+        // Analyse via Tesseract.js
         const result = await Tesseract.recognize(image, 'deu+fra', {
             logger: (info) => console.log(info),
         });
@@ -39,6 +42,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     }
 });
 
+// Configuration des cartes
 document.getElementById('confirmSideButton').addEventListener('click', () => {
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
@@ -51,8 +55,9 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
     frenchWords = [];
     germanWords = [];
 
+    // Traitement des lignes extraites
     extractedLines.forEach(line => {
-        const parts = line.split('-');
+        const parts = line.split('-'); // Assure que le séparateur est "-"
         if (parts.length === 2) {
             if (langSide === 'left') {
                 frenchWords.push(parts[0].trim());
@@ -72,12 +77,14 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
     startGame();
 });
 
+// Démarrer le jeu
 function startGame() {
     document.getElementById('instructions').classList.add('hidden');
     document.getElementById('game-section').classList.remove('hidden');
     showCard();
 }
 
+// Afficher une carte
 function showCard() {
     if (currentIndex >= frenchWords.length) {
         alert("Félicitations, vous avez terminé !");
@@ -86,12 +93,15 @@ function showCard() {
 
     const container = document.getElementById('card-container');
     container.innerHTML = `
-        <div class="card">${frenchWords[currentIndex]}</div>
+        <div class="card">
+            <p>${frenchWords[currentIndex]}</p>
+        </div>
         <input type="text" id="userAnswer" placeholder="Entrez la traduction">
         <button onclick="validateAnswer()" class="button">Valider</button>
     `;
 }
 
+// Validation de la réponse
 function validateAnswer() {
     const userAnswer = document.getElementById('userAnswer').value.trim().toLowerCase();
 
@@ -105,6 +115,7 @@ function validateAnswer() {
         showCard();
     }
 }
+
 // Afficher la boîte modale au chargement de la page
 window.addEventListener('load', () => {
     const modal = document.getElementById('modal');
@@ -115,34 +126,4 @@ window.addEventListener('load', () => {
     acceptButton.addEventListener('click', () => {
         modal.style.display = 'none';
     });
-});
-// EmailJS configuration
-emailjs.init('YOUR_PUBLIC_KEY'); // Remplacez par votre clé publique EmailJS
-
-// Formulaire de saisie de nom
-document.getElementById('nameForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const userName = document.getElementById('userName').value.trim();
-
-    if (!userName) {
-        alert("Veuillez entrer votre nom.");
-        return;
-    }
-
-    // Envoi de l'e-mail via EmailJS
-    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-        user_name: userName,
-        to_email: 'cyprien.guillaume@outlook.com',
-    })
-    .then(function (response) {
-        console.log('E-mail envoyé avec succès', response.status, response.text);
-        alert("Merci, votre nom a été envoyé !");
-    }, function (error) {
-        console.error('Erreur lors de l\'envoi de l\'e-mail', error);
-        alert("Une erreur s'est produite lors de l'envoi.");
-    });
-
-    // Réinitialiser le champ
-    document.getElementById('userName').value = '';
 });
