@@ -187,3 +187,54 @@ footer {
     color: white;
     margin-top: auto;
 }
+/* Features/Grid Styles (reused for cards) */
+.features {
+    padding: 50px 20px;
+    text-align: center;
+    background: #f1f8e9;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card, .card {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card h3 {
+    font-size: 1.5rem;
+    color: #0288d1;
+    margin-bottom: 10px;
+}
+
+.card input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.card button {
+    background: #0288d1;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.card button:hover {
+    background: #01579b;
+}
