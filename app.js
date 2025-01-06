@@ -105,3 +105,20 @@ function validateAnswer() {
         showCard();
     }
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('cookieModal');
+    const acceptButton = document.getElementById('acceptCookies');
+
+    // Vérifier si l'utilisateur a déjà accepté les cookies
+    const cookiesAccepted = localStorage.getItem('cookiesAccepted');
+
+    if (!cookiesAccepted) {
+        modal.classList.remove('hidden');
+    }
+
+    acceptButton.addEventListener('click', () => {
+        // Sauvegarder l'acceptation dans le stockage local
+        localStorage.setItem('cookiesAccepted', 'true');
+        modal.classList.add('hidden');
+    });
+});
