@@ -127,3 +127,40 @@ window.addEventListener('load', () => {
         modal.style.display = 'none';
     });
 });
+document.getElementById('contactForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const userName = document.getElementById('userName').value.trim();
+    const responseMessage = document.getElementById('responseMessage');
+
+    if (!userName) {
+        responseMessage.textContent = "Veuillez entrer votre nom.";
+        responseMessage.style.color = "red";
+        return;
+    }
+
+    try {
+        // Requête POST pour envoyer l'email
+        const response = await fetch('http://localhost:8080/send-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: userName }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            responseMessage.textContent = "Email envoyé avec succès !";
+            responseMessage.style.color = "green";
+        } else {
+            responseMessage.textContent = `Erreur : ${result.error}`;
+            responseMessage.style.color = "red";
+        }
+    } catch (error) {
+        console.error("Erreur lors de l'envoi :", error);
+        responseMessage.textContent = "Une erreur est survenue. Réessayez plus tard.";
+        responseMessage.style.color = "red";
+    }
+});
