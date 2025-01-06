@@ -3,6 +3,7 @@ let frenchWords = [];
 let germanWords = [];
 let currentIndex = 0;
 
+// Écouteur pour le formulaire de téléchargement d'image
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -39,6 +40,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     }
 });
 
+// Confirmation du côté français
 document.getElementById('confirmSideButton').addEventListener('click', () => {
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
@@ -72,12 +74,14 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
     startGame();
 });
 
+// Démarrage du jeu
 function startGame() {
     document.getElementById('instructions').classList.add('hidden');
     document.getElementById('game-section').classList.remove('hidden');
     showCard();
 }
 
+// Affichage des cartes interactives
 function showCard() {
     if (currentIndex >= frenchWords.length) {
         alert("Félicitations, vous avez terminé !");
@@ -92,6 +96,7 @@ function showCard() {
     `;
 }
 
+// Validation de la réponse
 function validateAnswer() {
     const userAnswer = document.getElementById('userAnswer').value.trim().toLowerCase();
 
@@ -105,6 +110,8 @@ function validateAnswer() {
         showCard();
     }
 }
+
+// Gestion des cookies
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('cookieModal');
     const acceptButton = document.getElementById('acceptCookies');
