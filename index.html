@@ -1,83 +1,124 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocabulaire Interactif</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="app.js" defer></script>
-</head>
-<body>
-    <!-- Navbar -->
-    <header class="navbar">
-        <div class="logo">Vocabulaire Interactif</div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="#home">Accueil</a></li>
-                <li><a href="#features">Fonctionnalités</a></li>
-                <li><a href="#upload">Commencer</a></li>
-                <li><a href="#about">À propos</a></li>
-            </ul>
-        </nav>
-    </header>
+let extractedLines = [];
+let frenchWords = [];
+let germanWords = [];
+let currentIndex = 0;
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1>Apprenez votre vocabulaire facilement !</h1>
-            <p>Transformez vos listes en cartes interactives pour une pratique ludique et efficace.</p>
-            <a href="#upload" class="hero-button">Commencer maintenant</a>
-        </div>
-    </section>
+document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <h2>Fonctionnalités</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <h3>Analyse d'images</h3>
-                <p>Importez une image de votre vocabulaire et laissez notre outil l'analyser pour vous.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Pratique interactive</h3>
-                <p>Apprenez en répondant à des cartes interactives personnalisées selon votre contenu.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Suivi personnalisé</h3>
-                <p>Adaptez votre apprentissage en fonction de vos progrès.</p>
-            </div>
-        </div>
-    </section>
+    const fileInput = document.getElementById('imageInput');
+    const instructions = document.getElementById('instructions');
 
-    <!-- Upload Section -->
-    <section id="upload" class="upload-section">
-        <h2>Commencer</h2>
-        <p><strong>Étape 1 :</strong> Téléchargez une image contenant votre liste de vocabulaire.</p>
-        <form id="uploadForm">
-            <input type="file" id="imageInput" accept="image/*" required>
-            <button type="submit" class="button">Analyser l'image</button>
-        </form>
-        <p id="redirect-message" class="hidden">
-            Analyse terminée ! <a href="questions.html" class="button">Passer aux questions</a>
-        </p>
-    </section>
+    if (!fileInput.files.length) {
+        alert("Veuillez sélectionner une image.");
+        return;
+    }
 
-    <!-- About Section -->
-    <section id="about" class="about-section">
-        <h2>À propos</h2>
-        <p>Ce site a été créé pour rendre l'apprentissage du vocabulaire amusant et interactif.</p>
-        <div class="developer-info">
-            <h3>Développeur :</h3>
-            <p><strong>Nom :</strong> Cyprien Guillaume</p>
-            <p><strong>Email :</strong> <a href="mailto:cyprien.guillaume@outlook.com">cyprien.guillaume@outlook.com</a></p>
-            <p><strong>Description :</strong> Développeur passionné par l'éducation et l'interactivité, dédié à créer des outils pédagogiques innovants.</p>
-        </div>
-    </section>
+    const file = fileInput.files[0];
+    const image = URL.createObjectURL(file);
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 - Vocabulaire Interactif. Développé par Cyprien Guillaume.</p>
-        <p>Si vous voulez, vous pouvez me twitter de l'argent pour m'encourager ! Normalement, si vous êtes sur ce site, vous me connaissez. Sinon, contactez-moi par mail.</p>
-    </footer>
-</body>
-</html>
+    document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
+
+    try {
+        const result = await Tesseract.recognize(image, 'deu+fra', {
+            logger: (info) => console.log(info),
+        });
+
+        extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
+        console.log('Texte extrait :', extractedLines);
+
+        if (!extractedLines.length) {
+            alert("Aucun texte détecté. Veuillez réessayer.");
+            return;
+        }
+
+        instructions.classList.remove('hidden');
+    } catch (error) {
+        console.error('Erreur lors de l\'analyse :', error);
+        alert("Erreur lors de l'analyse de l'image.");
+    }
+});
+
+document.getElementById('confirmSideButton').addEventListener('click', () => {
+    const langSideInput = document.querySelector('input[name="langSide"]:checked');
+
+    if (!langSideInput) {
+        alert("Veuillez sélectionner le côté français.");
+        return;
+    }
+
+    const langSide = langSideInput.value;
+    frenchWords = [];
+    germanWords = [];
+
+    extractedLines.forEach(line => {
+        const parts = line.split('-');
+        if (parts.length === 2) {
+            if (langSide === 'left') {
+                frenchWords.push(parts[0].trim());
+                germanWords.push(parts[1].trim());
+            } else {
+                frenchWords.push(parts[1].trim());
+                germanWords.push(parts[0].trim());
+            }
+        }
+    });
+
+    if (!frenchWords.length) {
+        alert("Aucune paire valide détectée. Vérifiez votre image.");
+        return;
+    }
+
+    startGame();
+});
+
+function startGame() {
+    document.getElementById('instructions').classList.add('hidden');
+    document.getElementById('game-section').classList.remove('hidden');
+    showCard();
+}
+
+function showCard() {
+    if (currentIndex >= frenchWords.length) {
+        alert("Félicitations, vous avez terminé !");
+        return;
+    }
+
+    const container = document.getElementById('card-container');
+    container.innerHTML = `
+        <div class="card">${frenchWords[currentIndex]}</div>
+        <input type="text" id="userAnswer" placeholder="Entrez la traduction">
+        <button onclick="validateAnswer()" class="button">Valider</button>
+    `;
+}
+
+function validateAnswer() {
+    const userAnswer = document.getElementById('userAnswer').value.trim().toLowerCase();
+
+    if (userAnswer === germanWords[currentIndex].toLowerCase()) {
+        alert("Correct !");
+        currentIndex++;
+        showCard();
+    } else {
+        alert(`Incorrect. La bonne réponse était : ${germanWords[currentIndex]}`);
+        currentIndex++;
+        showCard();
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('cookieModal');
+    const acceptButton = document.getElementById('acceptCookies');
+
+    // Vérifier si l'utilisateur a déjà accepté les cookies
+    const cookiesAccepted = localStorage.getItem('cookiesAccepted');
+
+    if (!cookiesAccepted) {
+        modal.classList.remove('hidden');
+    }
+
+    acceptButton.addEventListener('click', () => {
+        // Sauvegarder l'acceptation dans le stockage local
+        localStorage.setItem('cookiesAccepted', 'true');
+        modal.classList.add('hidden');
+    });
+});
