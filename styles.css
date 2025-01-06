@@ -143,20 +143,40 @@ body {
     margin-bottom: 20px;
 }
 
-/* Buttons */
-.button {
-    background: #0288d1;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
+/* Developer Info Section */
+.about-section {
+    padding: 50px 20px;
+    background: #e1f5fe;
+    text-align: center;
 }
 
-.button:hover {
-    background: #01579b;
+.about-section h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.developer-info {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.developer-info p {
+    font-size: 1rem;
+    color: #555;
+    margin: 10px 0;
+}
+
+.developer-info a {
+    color: #0288d1;
+    text-decoration: none;
+}
+
+.developer-info a:hover {
+    text-decoration: underline;
 }
 
 /* Footer */
