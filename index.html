@@ -5,9 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vocabulaire Interactif</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    <script src="app.js" defer></script>
 </head>
 <body>
+    <!-- Modal pour les cookies -->
+    <div id="cookieModal" class="modal">
+        <div class="modal-content">
+            <h2>Conditions d'utilisation</h2>
+            <p>En utilisant ce site, vous acceptez nos <a href="terms.html" target="_blank">conditions d'utilisation</a>.</p>
+            <button id="acceptCookies" class="button">Accepter</button>
+        </div>
+    </div>
+
+    <!-- Navbar -->
     <header class="navbar">
         <div class="logo">Vocabulaire Interactif</div>
         <nav>
@@ -20,6 +30,7 @@
         </nav>
     </header>
 
+    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
             <h1>Apprenez en vous amusant !</h1>
@@ -65,7 +76,5 @@
     <footer>
         <p>&copy; 2024 - Vocabulaire Interactif. Tous droits réservés.</p>
     </footer>
-
-    <script src="app.js"></script>
 </body>
 </html>
