@@ -3,6 +3,7 @@ let frenchWords = [];
 let germanWords = [];
 let currentIndex = 0;
 
+// Écouteur pour le formulaire de téléchargement d'image
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -17,7 +18,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     const file = fileInput.files[0];
     const image = URL.createObjectURL(file);
 
-    document.querySelector('.upload-section').innerHTML += <p>Analyse en cours...</p>;
+    document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
 
     try {
         const result = await Tesseract.recognize(image, 'deu+fra', {
@@ -39,6 +40,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     }
 });
 
+// Confirmation du côté français
 document.getElementById('confirmSideButton').addEventListener('click', () => {
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
@@ -72,12 +74,14 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
     startGame();
 });
 
+// Démarrage du jeu
 function startGame() {
     document.getElementById('instructions').classList.add('hidden');
     document.getElementById('game-section').classList.remove('hidden');
     showCard();
 }
 
+// Affichage des cartes interactives
 function showCard() {
     if (currentIndex >= frenchWords.length) {
         alert("Félicitations, vous avez terminé !");
@@ -85,13 +89,14 @@ function showCard() {
     }
 
     const container = document.getElementById('card-container');
-    container.innerHTML = 
+    container.innerHTML = `
         <div class="card">${frenchWords[currentIndex]}</div>
         <input type="text" id="userAnswer" placeholder="Entrez la traduction">
         <button onclick="validateAnswer()" class="button">Valider</button>
-    ;
+    `;
 }
 
+// Validation de la réponse
 function validateAnswer() {
     const userAnswer = document.getElementById('userAnswer').value.trim().toLowerCase();
 
@@ -100,11 +105,13 @@ function validateAnswer() {
         currentIndex++;
         showCard();
     } else {
-        alert(Incorrect. La bonne réponse était : ${germanWords[currentIndex]});
+        alert(`Incorrect. La bonne réponse était : ${germanWords[currentIndex]}`);
         currentIndex++;
         showCard();
     }
 }
+
+// Gestion des cookies
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('cookieModal');
     const acceptButton = document.getElementById('acceptCookies');
