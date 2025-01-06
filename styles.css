@@ -6,103 +6,57 @@ body {
     color: #333;
 }
 
-/* Navbar */
-.navbar {
-    position: sticky;
+/* Modal */
+.modal {
+    position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
-    background: #0288d1;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.nav-links {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-links li a {
-    text-decoration: none;
-    color: white;
-    font-size: 1rem;
-    transition: color 0.3s;
-}
-
-.nav-links li a:hover {
-    color: #ffccbc;
-}
-
-/* Hero Section */
-.hero {
-    height: 100vh;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #81d4fa, #0288d1);
-    color: white;
-    text-align: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
     padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.hero-content h1 {
-    font-size: 3rem;
-    margin: 0 0 20px;
+.modal-content h2 {
+    margin: 0 0 10px;
 }
 
-.hero-content p {
-    font-size: 1.2rem;
-    margin: 0 0 30px;
-}
-
-.hero-button {
-    background: white;
+.modal-content a {
     color: #0288d1;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 5px;
     text-decoration: none;
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s;
 }
 
-.hero-button:hover {
-    background: #ffccbc;
-    color: #0288d1;
-}
-
-/* Upload Section */
-.upload-section {
-    padding: 40px 20px;
-    background: white;
-    margin: 20px auto;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 800px;
+.modal-content a:hover {
+    text-decoration: underline;
 }
 
 .hidden {
     display: none;
 }
 
-/* Footer */
-footer {
-    text-align: center;
-    padding: 20px;
+/* Buttons */
+.button {
     background: #0288d1;
     color: white;
-    margin-top: auto;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.button:hover {
+    background: #01579b;
 }
