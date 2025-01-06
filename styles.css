@@ -17,7 +17,6 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    z-index: 1000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -95,37 +94,8 @@ body {
     max-width: 800px;
 }
 
-.upload-section h2 {
-    font-size: 1.8rem;
-    color: #0288d1;
-}
-
-.upload-section ul {
-    text-align: left;
-    padding: 0;
-    list-style: disc;
-    margin: 10px 20px;
-}
-
 .hidden {
     display: none;
-}
-
-.button {
-    background: #0288d1;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: background 0.3s;
-}
-
-.button:hover {
-    background: #01579b;
 }
 
 /* Footer */
