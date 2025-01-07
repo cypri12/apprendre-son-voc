@@ -3,48 +3,121 @@ let frenchWords = [];
 let germanWords = [];
 let currentIndex = 0;
 
-document.addEventListener('DOMContentLoaded', () => {
-    const uploadForm = document.getElementById('uploadForm');
-    const imageInput = document.getElementById('imageInput');
+// Gestion de l'envoi de l'image
+document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const fileInput = document.getElementById('imageInput');
     const instructions = document.getElementById('instructions');
 
-    // Vérifiez si les éléments existent
-    if (!uploadForm || !imageInput) {
-        console.error("Erreur : les éléments requis (uploadForm ou imageInput) sont introuvables dans le DOM.");
+    if (!fileInput.files.length) {
+        alert("Veuillez sélectionner une image.");
         return;
     }
 
-    uploadForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
+    const file = fileInput.files[0];
+    const image = URL.createObjectURL(file);
 
-        if (!imageInput.files.length) {
-            alert("Veuillez sélectionner une image.");
+    document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
+
+    try {
+        // Analyse de l'image avec Tesseract.js
+        const result = await Tesseract.recognize(image, 'deu+fra', {
+            logger: (info) => console.log(info),
+        });
+
+        extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
+        console.log('Texte extrait :', extractedLines);
+
+        if (!extractedLines.length) {
+            alert("Aucun texte détecté. Veuillez réessayer.");
             return;
         }
 
-        const file = imageInput.files[0];
-        const image = URL.createObjectURL(file);
+        instructions.classList.remove('hidden');
+    } catch (error) {
+        console.error('Erreur lors de l\'analyse :', error);
+        alert("Erreur lors de l'analyse de l'image.");
+    }
+});
 
-        document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
+// Configuration des cartes interactives
+document.getElementById('confirmSideButton').addEventListener('click', () => {
+    const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
-        try {
-            const result = await Tesseract.recognize(image, 'deu+fra', {
-                logger: (info) => console.log(info),
-            });
+    if (!langSideInput) {
+        alert("Veuillez sélectionner le côté français.");
+        return;
+    }
 
-            extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
-            console.log('Texte extrait :', extractedLines);
+    const langSide = langSideInput.value;
+    frenchWords = [];
+    germanWords = [];
 
-            if (!extractedLines.length) {
-                alert("Aucun texte détecté. Veuillez réessayer.");
-                return;
+    extractedLines.forEach(line => {
+        const parts = line.split('-');
+        if (parts.length === 2) {
+            if (langSide === 'left') {
+                frenchWords.push(parts[0].trim());
+                germanWords.push(parts[1].trim());
+            } else {
+                frenchWords.push(parts[1].trim());
+                germanWords.push(parts[0].trim());
             }
-
-            instructions.textContent = "Analyse terminée ! Voici les données extraites :";
-            instructions.classList.remove('hidden');
-        } catch (error) {
-            console.error('Erreur lors de l\'analyse :', error);
-            alert("Erreur lors de l'analyse de l'image.");
         }
     });
+
+    if (!frenchWords.length) {
+        alert("Aucune paire valide détectée. Vérifiez votre image.");
+        return;
+    }
+
+    startGame();
+});
+
+// Démarrer le jeu
+function startGame() {
+    document.getElementById('instructions').classList.add('hidden');
+    document.getElementById('game-section').classList.remove('hidden');
+    showCard();
+}
+
+// Afficher une carte
+function showCard() {
+    if (currentIndex >= frenchWords.length) {
+        alert("Félicitations, vous avez terminé !");
+        return;
+    }
+
+    const container = document.getElementById('card-container');
+    container.innerHTML = `
+        <div class="card">${frenchWords[currentIndex]}</div>
+        <input type="text" id="userAnswer" placeholder="Entrez la traduction">
+        <button onclick="validateAnswer()" class="button">Valider</button>
+    `;
+}
+
+// Valider la réponse
+function validateAnswer() {
+    const userAnswer = document.getElementById('userAnswer').value.trim().toLowerCase();
+
+    if (userAnswer === germanWords[currentIndex].toLowerCase()) {
+        alert("Correct !");
+        currentIndex++;
+        showCard();
+    } else {
+        alert(`Incorrect. La bonne réponse était : ${germanWords[currentIndex]}`);
+        currentIndex++;
+        showCard();
+    }
+}
+
+// Afficher les noms enregistrés si nécessaire
+function displayEncouragementMessage() {
+    console.log("Merci d'utiliser ce site pour apprendre votre vocabulaire !");
+}
+
+// Initialisation du site
+window.addEventListener('load', () => {
+    displayEncouragementMessage();
 });
