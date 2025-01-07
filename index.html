@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vocabulaire Interactif</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
-    <script src="app.js" defer></script>
 </head>
 <body>
     <!-- Navbar -->
@@ -58,10 +56,6 @@
             <input type="file" id="imageInput" accept="image/*" required>
             <button type="submit" class="button">Analyser l'image</button>
         </form>
-        <p id="instructions" class="hidden">
-            Analyse terminée ! Instructions pour configurer les cartes s'afficheront ici.
-        </p>
-
     </section>
 
     <!-- About Section -->
@@ -76,10 +70,15 @@
         </div>
     </section>
 
+    <!-- Encourage Section -->
+    <section id="encourage" class="encourage-section">
+        <h2>Encouragez-moi !</h2>
+        <p>Si vous voulez, vous pouvez me twister de l'argent pour m'encourager ! Normalement, si vous êtes sur ce site, vous me connaissez, sinon contactez-moi par mail.</p>
+    </section>
+
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 - Vocabulaire Interactif. Développé par Cyprien Guillaume.</p>
-        <p>Si vous voulez, vous pouvez me twitter de l'argent pour m'encourager ! Normalement, si vous êtes sur ce site, vous me connaissez. Sinon, contactez-moi par mail.</p>
     </footer>
 </body>
 </html>
