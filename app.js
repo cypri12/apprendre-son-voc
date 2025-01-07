@@ -3,46 +3,55 @@ let frenchWords = [];
 let germanWords = [];
 let currentIndex = 0;
 
-// Gestion de l'envoi de l'image
-document.getElementById('uploadForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const fileInput = document.getElementById('imageInput');
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadForm = document.getElementById('uploadForm');
     const instructions = document.getElementById('instructions');
+    
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-    if (!fileInput.files.length) {
-        alert("Veuillez sélectionner une image.");
-        return;
-    }
+            const fileInput = document.getElementById('imageInput');
 
-    const file = fileInput.files[0];
-    const image = URL.createObjectURL(file);
+            if (!fileInput.files.length) {
+                alert("Veuillez sélectionner une image.");
+                return;
+            }
 
-    document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
+            const file = fileInput.files[0];
+            const image = URL.createObjectURL(file);
 
-    try {
-        // Analyse de l'image avec Tesseract.js
-        const result = await Tesseract.recognize(image, 'deu+fra', {
-            logger: (info) => console.log(info),
+            document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
+
+            try {
+                const result = await Tesseract.recognize(image, 'deu+fra', {
+                    langPath: 'https://tessdata.projectnaptha.com/4.0.0_best/',
+                    logger: (info) => console.log(info),
+                });
+
+                extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
+                console.log('Texte extrait :', extractedLines);
+
+                if (!extractedLines.length) {
+                    alert("Aucun texte détecté. Veuillez vérifier votre image.");
+                    return;
+                }
+
+                if (instructions) {
+                    instructions.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'analyse :', error);
+                alert("Erreur lors de l'analyse : " + error.message);
+            }
         });
-
-        extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
-        console.log('Texte extrait :', extractedLines);
-
-        if (!extractedLines.length) {
-            alert("Aucun texte détecté. Veuillez réessayer.");
-            return;
-        }
-
-        instructions.classList.remove('hidden');
-    } catch (error) {
-        console.error('Erreur lors de l\'analyse :', error);
-        alert("Erreur lors de l'analyse de l'image.");
+    } else {
+        console.error("Le formulaire d'upload (#uploadForm) est introuvable dans le DOM.");
     }
 });
 
 // Configuration des cartes interactives
-document.getElementById('confirmSideButton').addEventListener('click', () => {
+document.getElementById('confirmSideButton')?.addEventListener('click', () => {
     const langSideInput = document.querySelector('input[name="langSide"]:checked');
 
     if (!langSideInput) {
@@ -75,14 +84,18 @@ document.getElementById('confirmSideButton').addEventListener('click', () => {
     startGame();
 });
 
-// Démarrer le jeu
+// Fonction pour démarrer le jeu
 function startGame() {
-    document.getElementById('instructions').classList.add('hidden');
-    document.getElementById('game-section').classList.remove('hidden');
+    const instructions = document.getElementById('instructions');
+    const gameSection = document.getElementById('game-section');
+
+    if (instructions) instructions.classList.add('hidden');
+    if (gameSection) gameSection.classList.remove('hidden');
+
     showCard();
 }
 
-// Afficher une carte
+// Afficher la carte actuelle
 function showCard() {
     if (currentIndex >= frenchWords.length) {
         alert("Félicitations, vous avez terminé !");
@@ -90,16 +103,18 @@ function showCard() {
     }
 
     const container = document.getElementById('card-container');
-    container.innerHTML = `
-        <div class="card">${frenchWords[currentIndex]}</div>
-        <input type="text" id="userAnswer" placeholder="Entrez la traduction">
-        <button onclick="validateAnswer()" class="button">Valider</button>
-    `;
+    if (container) {
+        container.innerHTML = `
+            <div class="card">${frenchWords[currentIndex]}</div>
+            <input type="text" id="userAnswer" placeholder="Entrez la traduction">
+            <button onclick="validateAnswer()" class="button">Valider</button>
+        `;
+    }
 }
 
-// Valider la réponse
+// Valider la réponse de l'utilisateur
 function validateAnswer() {
-    const userAnswer = document.getElementById('userAnswer').value.trim().toLowerCase();
+    const userAnswer = document.getElementById('userAnswer')?.value.trim().toLowerCase();
 
     if (userAnswer === germanWords[currentIndex].toLowerCase()) {
         alert("Correct !");
@@ -111,8 +126,3 @@ function validateAnswer() {
         showCard();
     }
 }
-
-// Afficher un message de bienvenue
-window.addEventListener('load', () => {
-    console.log("Bienvenue sur le site Vocabulaire Interactif !");
-});
