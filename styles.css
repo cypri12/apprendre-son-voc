@@ -1,12 +1,24 @@
-/* General Styles */
+/* Global Styles */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
     line-height: 1.6;
 }
 
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Navbar */
 .navbar {
-    background-color: #333;
+    background-color: #004aad;
     color: white;
     padding: 1rem 2rem;
     display: flex;
@@ -17,67 +29,176 @@ body {
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .nav-links a {
     color: white;
-    text-decoration: none;
+    font-weight: bold;
 }
 
+.nav-links a:hover {
+    color: #ffdd57;
+}
+
+/* Hero Section */
 .hero {
     text-align: center;
     padding: 5rem 2rem;
-    background-color: #f4f4f4;
+    background: linear-gradient(120deg, #004aad, #1e90ff);
+    color: white;
 }
 
 .hero h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.hero p {
+    font-size: 1.2rem;
 }
 
 .hero-button {
     display: inline-block;
     margin-top: 1rem;
-    padding: 0.5rem 2rem;
-    background-color: #007bff;
-    color: white;
+    padding: 0.75rem 2rem;
+    background-color: #ffdd57;
+    color: #004aad;
+    font-weight: bold;
     text-decoration: none;
     border-radius: 5px;
 }
 
+.hero-button:hover {
+    background-color: #ffd333;
+}
+
+/* Features Section */
 .features {
     padding: 2rem;
-    background-color: #fff;
+    background-color: #e6f2ff;
     text-align: center;
+}
+
+.features h2 {
+    color: #004aad;
+    margin-bottom: 1.5rem;
 }
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
+    margin-top: 1rem;
 }
 
 .feature-card {
     padding: 1.5rem;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.feature-card h3 {
+    color: #004aad;
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    color: #555;
+}
+
+/* Upload Section */
 .upload-section {
     padding: 2rem;
     text-align: center;
-    background-color: #f4f4f4;
+    background-color: #f0f8ff;
 }
 
+.upload-section h2 {
+    color: #004aad;
+}
+
+.upload-section p {
+    color: #555;
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #003b8b;
+}
+
+input[type="file"] {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Instructions Section */
 .hidden {
     display: none;
 }
 
+/* Game Section */
+#game-section {
+    text-align: center;
+    padding: 2rem;
+}
+
+.card {
+    margin: 1rem auto;
+    padding: 1rem;
+    background-color: #e6f2ff;
+    border: 1px solid #004aad;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    color: #004aad;
+    font-weight: bold;
+}
+
+/* About Section */
+.about-section {
+    padding: 2rem;
+    background-color: #e6f2ff;
+    color: #004aad;
+    text-align: center;
+}
+
+.about-section h2 {
+    margin-bottom: 1rem;
+}
+
+.about-section .developer-info p {
+    color: #555;
+}
+
+.about-section a {
+    color: #004aad;
+    font-weight: bold;
+}
+
+/* Footer */
 footer {
-    background-color: #333;
+    background-color: #004aad;
     color: white;
     text-align: center;
     padding: 1rem 0;
+    font-size: 0.9rem;
+}
+
+footer p {
+    margin: 0;
 }
