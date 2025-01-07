@@ -1,174 +1,83 @@
-/* Global Styles */
+/* General Styles */
 body {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #f5f5f5, #e3f2fd);
-    color: #333;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
 }
 
-/* Navbar */
 .navbar {
-    position: sticky;
-    top: 0;
-    width: 100%;
-    background: #0288d1;
+    background-color: #333;
     color: white;
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
 }
 
 .nav-links {
-    display: flex;
-    gap: 20px;
     list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-links li a {
-    text-decoration: none;
-    color: white;
-    font-size: 1rem;
-    transition: color 0.3s;
-}
-
-.nav-links li a:hover {
-    color: #ffccbc;
-}
-
-/* Hero Section */
-.hero {
-    height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #81d4fa, #0288d1);
+    gap: 1rem;
+}
+
+.nav-links a {
     color: white;
+    text-decoration: none;
+}
+
+.hero {
     text-align: center;
-    padding: 20px;
+    padding: 5rem 2rem;
+    background-color: #f4f4f4;
 }
 
-.hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-}
-
-.hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
 }
 
 .hero-button {
-    background: white;
-    color: #0288d1;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 5px;
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 2rem;
+    background-color: #007bff;
+    color: white;
     text-decoration: none;
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s;
+    border-radius: 5px;
 }
 
-.hero-button:hover {
-    background: #ffccbc;
-    color: #0288d1;
-}
-
-/* Features Section */
 .features {
-    padding: 50px 20px;
+    padding: 2rem;
+    background-color: #fff;
     text-align: center;
-    background: #f1f8e9;
-}
-
-.features h2 {
-    font-size: 2rem;
-    margin-bottom: 30px;
 }
 
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 1.5rem;
 }
 
 .feature-card {
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
-.feature-card h3 {
-    font-size: 1.5rem;
-    color: #0288d1;
-    margin-bottom: 10px;
-}
-
-.feature-card p {
-    font-size: 1rem;
-    color: #555;
-}
-
-/* Upload Section */
 .upload-section {
-    padding: 40px 20px;
-    background: white;
-    margin: 20px auto;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 800px;
+    padding: 2rem;
     text-align: center;
+    background-color: #f4f4f4;
 }
 
-.upload-section h2 {
-    font-size: 1.8rem;
-    color: #0288d1;
+.hidden {
+    display: none;
 }
 
-.upload-section p {
-    font-size: 1rem;
-    margin-bottom: 20px;
-}
-
-/* Encourage Section */
-.encourage-section {
-    padding: 30px 20px;
-    text-align: center;
-    background: #e3f2fd;
-    margin: 20px auto;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.encourage-section h2 {
-    font-size: 1.8rem;
-    color: #0288d1;
-    margin-bottom: 10px;
-}
-
-.encourage-section p {
-    font-size: 1.2rem;
-    color: #555;
-}
-
-/* Footer */
 footer {
-    text-align: center;
-    padding: 20px;
-    background: #0288d1;
+    background-color: #333;
     color: white;
-    margin-top: auto;
+    text-align: center;
+    padding: 1rem 0;
 }
