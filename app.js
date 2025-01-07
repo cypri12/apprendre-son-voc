@@ -5,23 +5,24 @@ let currentIndex = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     const uploadForm = document.getElementById('uploadForm');
+    const imageInput = document.getElementById('imageInput');
     const instructions = document.getElementById('instructions');
 
-    if (!uploadForm) {
-        console.error("Le formulaire 'uploadForm' est introuvable.");
+    // Vérifiez si les éléments existent
+    if (!uploadForm || !imageInput) {
+        console.error("Erreur : les éléments requis (uploadForm ou imageInput) sont introuvables dans le DOM.");
         return;
     }
 
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const fileInput = document.getElementById('imageInput');
-        if (!fileInput || !fileInput.files.length) {
+        if (!imageInput.files.length) {
             alert("Veuillez sélectionner une image.");
             return;
         }
 
-        const file = fileInput.files[0];
+        const file = imageInput.files[0];
         const image = URL.createObjectURL(file);
 
         document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
