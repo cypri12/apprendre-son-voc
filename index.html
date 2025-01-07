@@ -58,6 +58,29 @@
         </form>
     </section>
 
+    <!-- Instructions Section -->
+    <section id="instructions" class="hidden">
+        <h2>Étape 2 : Configurez vos cartes</h2>
+        <p>De quel côté du tiret se trouve le texte en français ?</p>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="langSide" value="left" required> Français à gauche
+            </label>
+            <label>
+                <input type="radio" name="langSide" value="right"> Français à droite
+            </label>
+        </div>
+        <button id="confirmSideButton" class="button">Confirmer</button>
+    </section>
+
+    <!-- Game Section -->
+    <section id="game-section" class="hidden">
+        <h2>Étape 3 : Répondez aux cartes</h2>
+        <div id="card-container">
+            <!-- Les cartes interactives s'afficheront ici -->
+        </div>
+    </section>
+
     <!-- About Section -->
     <section id="about" class="about-section">
         <h2>À propos</h2>
@@ -70,18 +93,12 @@
         </div>
     </section>
 
-    <!-- Encourage Section -->
-    <section id="encourage" class="encourage-section">
-        <h2>Encouragez-moi !</h2>
-        <p>Si vous voulez, vous pouvez me twister de l'argent pour m'encourager ! Normalement, si vous êtes sur ce site, vous me connaissez, sinon contactez-moi par mail.</p>
-    </section>
-
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 - Vocabulaire Interactif. Développé par Cyprien Guillaume.</p>
     </footer>
 
-    <!-- Script -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
     <script src="app.js" defer></script>
 </body>
