@@ -112,12 +112,7 @@ function validateAnswer() {
     }
 }
 
-// Afficher les noms enregistrés si nécessaire
-function displayEncouragementMessage() {
-    console.log("Merci d'utiliser ce site pour apprendre votre vocabulaire !");
-}
-
-// Initialisation du site
+// Afficher un message de bienvenue
 window.addEventListener('load', () => {
-    displayEncouragementMessage();
+    console.log("Bienvenue sur le site Vocabulaire Interactif !");
 });
