@@ -126,3 +126,31 @@ function validateAnswer() {
         showCard();
     }
 }
+document.addEventListener('DOMContentLoaded', () => {
+    // Modal functionality
+    const modal = document.getElementById('modal');
+    const acceptButton = document.getElementById('acceptButton');
+    const termsButton = document.getElementById('termsButton');
+    const navMenu = document.getElementById('navMenu');
+    const menuToggle = document.getElementById('menuToggle');
+
+    if (modal && acceptButton) {
+        modal.style.display = 'flex';
+
+        acceptButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
+
+    if (termsButton) {
+        termsButton.addEventListener('click', () => {
+            window.open('terms.html', '_blank');
+        });
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('hidden');
+        });
+    }
+});
