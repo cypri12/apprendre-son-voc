@@ -3,129 +3,47 @@ let frenchWords = [];
 let germanWords = [];
 let currentIndex = 0;
 
-// Écouteur pour le formulaire de téléchargement d'image
-document.getElementById('uploadForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const fileInput = document.getElementById('imageInput');
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadForm = document.getElementById('uploadForm');
     const instructions = document.getElementById('instructions');
 
-    if (!fileInput.files.length) {
-        alert("Veuillez sélectionner une image.");
+    if (!uploadForm) {
+        console.error("Le formulaire 'uploadForm' est introuvable.");
         return;
     }
 
-    const file = fileInput.files[0];
-    const image = URL.createObjectURL(file);
+    uploadForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-    document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
-
-    try {
-        const result = await Tesseract.recognize(image, 'deu+fra', {
-            logger: (info) => console.log(info),
-        });
-
-        extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
-        console.log('Texte extrait :', extractedLines);
-
-        if (!extractedLines.length) {
-            alert("Aucun texte détecté. Veuillez réessayer.");
+        const fileInput = document.getElementById('imageInput');
+        if (!fileInput || !fileInput.files.length) {
+            alert("Veuillez sélectionner une image.");
             return;
         }
 
-        instructions.classList.remove('hidden');
-    } catch (error) {
-        console.error('Erreur lors de l\'analyse :', error);
-        alert("Erreur lors de l'analyse de l'image.");
-    }
-});
+        const file = fileInput.files[0];
+        const image = URL.createObjectURL(file);
 
-// Confirmation du côté français
-document.getElementById('confirmSideButton').addEventListener('click', () => {
-    const langSideInput = document.querySelector('input[name="langSide"]:checked');
+        document.querySelector('.upload-section').innerHTML += `<p>Analyse en cours...</p>`;
 
-    if (!langSideInput) {
-        alert("Veuillez sélectionner le côté français.");
-        return;
-    }
+        try {
+            const result = await Tesseract.recognize(image, 'deu+fra', {
+                logger: (info) => console.log(info),
+            });
 
-    const langSide = langSideInput.value;
-    frenchWords = [];
-    germanWords = [];
+            extractedLines = result.data.text.split('\n').filter(line => line.trim() !== '');
+            console.log('Texte extrait :', extractedLines);
 
-    extractedLines.forEach(line => {
-        const parts = line.split('-');
-        if (parts.length === 2) {
-            if (langSide === 'left') {
-                frenchWords.push(parts[0].trim());
-                germanWords.push(parts[1].trim());
-            } else {
-                frenchWords.push(parts[1].trim());
-                germanWords.push(parts[0].trim());
+            if (!extractedLines.length) {
+                alert("Aucun texte détecté. Veuillez réessayer.");
+                return;
             }
+
+            instructions.textContent = "Analyse terminée ! Voici les données extraites :";
+            instructions.classList.remove('hidden');
+        } catch (error) {
+            console.error('Erreur lors de l\'analyse :', error);
+            alert("Erreur lors de l'analyse de l'image.");
         }
-    });
-
-    if (!frenchWords.length) {
-        alert("Aucune paire valide détectée. Vérifiez votre image.");
-        return;
-    }
-
-    startGame();
-});
-
-// Démarrage du jeu
-function startGame() {
-    document.getElementById('instructions').classList.add('hidden');
-    document.getElementById('game-section').classList.remove('hidden');
-    showCard();
-}
-
-// Affichage des cartes interactives
-function showCard() {
-    if (currentIndex >= frenchWords.length) {
-        alert("Félicitations, vous avez terminé !");
-        return;
-    }
-
-    const container = document.getElementById('card-container');
-    container.innerHTML = `
-        <div class="card">${frenchWords[currentIndex]}</div>
-        <input type="text" id="userAnswer" placeholder="Entrez la traduction">
-        <button onclick="validateAnswer()" class="button">Valider</button>
-    `;
-}
-
-// Validation de la réponse
-function validateAnswer() {
-    const userAnswer = document.getElementById('userAnswer').value.trim().toLowerCase();
-
-    if (userAnswer === germanWords[currentIndex].toLowerCase()) {
-        alert("Correct !");
-        currentIndex++;
-        showCard();
-    } else {
-        alert(`Incorrect. La bonne réponse était : ${germanWords[currentIndex]}`);
-        currentIndex++;
-        showCard();
-    }
-}
-
-// Gestion des cookies
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('cookieModal');
-    const acceptButton = document.getElementById('acceptCookies');
-
-    // Vérifier si l'utilisateur a déjà accepté les cookies
-    const cookiesAccepted = localStorage.getItem('cookiesAccepted');
-
-    if (!cookiesAccepted) {
-        modal.classList.remove('hidden');
-    }
-
-    acceptButton.addEventListener('click', () => {
-        // Sauvegarder l'acceptation dans le stockage local
-        localStorage.setItem('cookiesAccepted', 'true');
-        modal.classList.add('hidden');
     });
 });
