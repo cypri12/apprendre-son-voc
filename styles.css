@@ -148,6 +148,27 @@ button:hover {
     background-color: #0056b3;
 }
 
+.status {
+    margin-top: 1rem;
+    font-weight: bold;
+    color: #004aad;
+}
+
+.choice-group {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.choice-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+}
+
 /* Instructions Section */
 .hidden {
     display: none;
@@ -218,127 +239,3 @@ footer p {
         font-size: 1rem;
     }
 }
-/* General Styles */
-body {
-    margin: 0;
-    font-family: 'Roboto', Arial, sans-serif;
-    line-height: 1.6;
-    background: #f8f9fa;
-    color: #333;
-}
-
-a {
-    color: #0056b3;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Navbar */
-.navbar {
-    background-color: #007bff;
-    color: white;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.nav-links ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 1.5rem;
-}
-
-.nav-links.hidden {
-    display: none;
-}
-
-.nav-links ul a {
-    color: white;
-    font-weight: bold;
-}
-
-.nav-links ul a:hover {
-    color: #ffdd57;
-}
-
-.menu-icon {
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-/* Modal Styles */
-.modal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.button {
-    margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.button:hover {
-    background-color: #0056b3;
-}
-
-.link-button {
-    background: none;
-    color: #007bff;
-    border: none;
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-/* Hero Section */
-.hero {
-    text-align: center;
-    padding: 6rem 2rem;
-    background: linear-gradient(120deg, #007bff, #00c6ff);
-    color: white;
-}
-
-.hero-button {
-    margin-top: 1rem;
-    padding: 1rem 2rem;
-    background-color: #ffdd57;
-    color: #004aad;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 30px;
-}
-
-/* Other styles omitted for brevity */

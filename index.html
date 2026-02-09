@@ -68,6 +68,31 @@
             <input type="file" id="imageInput" accept="image/*" required>
             <button type="submit" class="button">Analyser l'image</button>
         </form>
+        <p id="uploadStatus" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- Instructions Section -->
+    <section id="instructions" class="features hidden">
+        <h2>Étape 2 : Choisissez le côté du français</h2>
+        <p>Indiquez si le français est à gauche ou à droite dans votre liste.</p>
+        <div class="choice-group">
+            <label>
+                <input type="radio" name="langSide" value="left">
+                Français à gauche
+            </label>
+            <label>
+                <input type="radio" name="langSide" value="right">
+                Français à droite
+            </label>
+        </div>
+        <button id="confirmSideButton" class="button">Lancer les cartes</button>
+    </section>
+
+    <!-- Game Section -->
+    <section id="game-section" class="hidden">
+        <h2>Vos cartes interactives</h2>
+        <div id="card-container"></div>
+        <button id="restartButton" class="button hidden">Recommencer</button>
     </section>
 
     <!-- About Section -->
